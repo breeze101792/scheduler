@@ -23,23 +23,61 @@ class CommandLineInterface:
         ### local vars ###
         self.__mode = EUIMode.FILE
         self.__history = ['history','quit']
+        self.__function_dict=dict()
+
+        ### Function Configs ###
+        self.regist_cmd("help", self.__help, "Print help")
+        self.regist_cmd("exit", self.__exit, "Exit the program")
+        self.regist_cmd("history", self.__history, "Print history")
+    @staticmethod
+    def __exit(args):
+        exit()
+    def __history(self, args):
+        self.ui_print_line("History")
+        for each_cmd in self.__history:
+            self.ui_print_line(each_cmd)
+
+    def __help(self, args):
+        self.ui_print_line("Help")
+        # print("   under construction")
+        for each_key in self.__function_dict.keys():
+            self.ui_print_line("% 8s: %s" % (each_key, self.__function_dict[each_key][1]))
     def set_mode(self, mode):
         self.__mode = mode
 
-    def ui_print(self, *args):
+    @staticmethod
+    def ui_print(*args):
         print("".join(map(str,args)), end="", flush=True)
-    def ui_print_line(self, *args):
+    @staticmethod
+    def ui_print_line(*args):
         print("".join(map(str,args)), flush=True)
-    def start_thread(self):
-        x = threading.Thread(target=self.key_press, args=(0,))
-        x.start()
-        self.ui_print_line("End of init key thread")
     def __print_line_buffer(self, line_buffer, cursor_shift_idx):
         trailing_space_nmu=16
         # self.ui_print("\r"+" "*(len(self.__promote)+len(line_buffer)))
         # self.ui_print("\r                                             ")
         self.ui_print("\r"+self.__promote+line_buffer+trailing_space_nmu*" ")
         self.ui_print("\033[%dD" % (cursor_shift_idx + trailing_space_nmu))
+
+    def parse(self):
+        pass
+    def regist_cmd(self, key_word, func_ptr, description=""):
+        self.__function_dict[key_word] = [func_ptr, description]
+        # print(self.__function_dict)
+    def run(self):
+        line_buffer=""
+        while self.__flag_running == True:
+            # clean screen
+            # sp.call('clear',shell=False)
+            line_buffer=self.get_line()
+            cmd_token = line_buffer.split()
+            # print("Line Buffer: ", cmd_token)
+            for each_key in self.__function_dict.keys():
+                if each_key == cmd_token[0]:
+                    self.__function_dict[each_key][0](cmd_token)
+            # if line_buffer in ("q", "Q", "x", "X"):
+            #     self.ui_print_line("Bye")
+            #     self.__flag_running = False
+
     def get_line(self):
         line_buffer=""
         line_bakup_buffer=""
@@ -67,6 +105,12 @@ class CommandLineInterface:
                 esc_dectect=True
                 dbg_debug("Esc Key")
                 continue
+            elif key_press == chr(0x04):
+                # ctrl + d
+                self.__exit(None)
+            # elif key_press == chr(0x03):
+            #     # ctrl + c
+            #     self.__exit(None)
             elif key_press == chr(0x7f):
                 # backspace
                 # print("test")
@@ -131,14 +175,6 @@ class CommandLineInterface:
                 esc_dectect=False
                 pkey_press=''
 
-
-                pass
-            if key_press in ("q", "Q"):
-                self.ui_print_line("Bye")
-                self.__flag_running = False
-            else:
-                pass
-
             # normal key press
             if key_press in ("\r", "\n"):
                 # print("Enter")
@@ -152,32 +188,10 @@ class CommandLineInterface:
         self.__history.append(line_buffer)
         # self.ui_print_line(self.__history)
         return line_buffer
-
-    def run(self):
-        line_buffer=""
-        while self.__flag_running == True:
-            # clean screen
-            # sp.call('clear',shell=False)
-            line_buffer=self.get_line()
-            print("Line Buffer: " + line_buffer)
-            if line_buffer in ("q", "Q", "x", "X"):
-                self.ui_print_line("Bye")
-                self.__flag_running = False
-
-            # operations
-            # while self.__flag_running == True and self.__mode != EUIMode.WORD:
-            #     # self.ui_print_line("Enter a key(x/Exit, n/Next, P/Previous, s/Searching):")
-            #     key_press = getch()
-            #     print(key_press.encode("ascii"))
-            #     time.sleep(self.__key_delay)
-            #     if key_press in ("q", "Q", "x", "X"):
-            #         self.ui_print_line("Bye")
-            #         self.__flag_running = False
-            #     elif key_press in ("b", "B"):
-            #         break
-            #     else:
-            #         print("Unknown key>" + key_press)
-            #         continue
+    # def start_thread(self):
+    #     x = threading.Thread(target=self.key_press, args=(0,))
+    #     x.start()
+    #     self.ui_print_line("End of init key thread")
 
     # def key_press(self, test):
     #     while True:
