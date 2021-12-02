@@ -4,6 +4,7 @@ from optparse import OptionParser
 from Project import *
 from Task import *
 from Annotation import *
+from utility.debug import *
 
 def main():
     parser = OptionParser(usage='Usage: Scheduler [options] ......')
@@ -42,7 +43,7 @@ def main():
     ## Run
     ################################################################
     try:
-        print("try")
+        dbg_info("Test")
     except (OSError, KeyboardInterrupt):
         print("Bye")
     except:

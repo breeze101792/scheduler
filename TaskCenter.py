@@ -22,7 +22,7 @@ class TaskCenter:
                          (TID TEXT, PID TEXT, Name CHAR(255), Description VARCHAR DEFAULT "", Status INT DEFAULT 0, Priority INT DEFAULT 0, StartDate DATETIME DEFAULT "0001-01-01", DueDate DATETIME DEFAULT "0001-01-01", EndDate DATETIME DEFAULT "0001-01-01")''')
 
             c.execute('''CREATE TABLE ANNOTATION
-                         (AID TEXT, Annotation CHAR(255), Status CHAR(255), TimeStamp DATETIME)''')
+                         (AID TEXT, RID TEXT, Annotation CHAR(255), Type INT DEFAULT 1, TimeStamp DATETIME)''')
 
             # datetime format
             # 0001-01-01 00:00:00.0000000
@@ -105,6 +105,16 @@ class TaskCenter:
             result = self.__cursor.execute(query_str)
             self.__unlock()
             return result.fetchall()
+    def quer_for_all_annotation(self):
+        if self.__is_locked():
+            # print('db is locked')
+            return False
+        else:
+            self.__lock()
+            query_str = """SELECT * FROM ANNOTATION;"""
+            result = self.__cursor.execute(query_str)
+            self.__unlock()
+            return result.fetchall()
     def __get_nex_proj_id(self):
         self.__lock()
         query_str = "SELECT COUNT(PID) FROM PROJECT"
@@ -131,11 +141,34 @@ class TaskCenter:
                 width=8,
                 )
         return tid
+    def __get_nex_anno_id(self):
+        self.__lock()
+        query_str = "SELECT COUNT(AID) FROM ANNOTATION"
+        result = self.__cursor.execute(query_str)
+        self.__unlock()
+        proj_cnt = result.fetchall()[0][0]
+        aid = 'A{message:{fill}{align}{width}}'.format(
+                message=proj_cnt.__str__(),
+                fill='0',
+                align='>',
+                width=8,
+                )
+        return aid
     def __is_proj_exist(self,pid):
         query_str = "SELECT pid FROM PROJECT WHERE PID == '%s'" % pid
         # print(query_str)
         result = self.__cursor.execute(query_str).fetchone()
         # print("test", pid, result)
+        if result is None:
+            # word is already in the wordbank
+            return False
+        else:
+            return True
+    def __is_task_exist(self,tid):
+        query_str = "SELECT TID FROM TASK WHERE TID == '%s'" % tid
+        # print(query_str)
+        result = self.__cursor.execute(query_str).fetchone()
+        # print("test", tid, result)
         if result is None:
             # word is already in the wordbank
             return False
@@ -196,10 +229,38 @@ class TaskCenter:
             self.__unlock()
             return result #.fetchone()
 
+    def insert_annotation(self, rid, annotation, anno_type = 0, time_stamp = None):
+        # (AID TEXT, RID TEXT, Annotation CHAR(255), Type INT DEFAULT 1, TimeStamp DATETIME)''')
+
+        # query_str = "SELECT name FROM ANNOTATION WHERE Name == '%s'" % name
+        # print(query_str)
+        if self.__is_locked():
+            # print('db is locked')
+            return False
+        else:
+            self.__lock()
+            # result = self.__cursor.execute(query_str).fetchone()
+            # print(result)
+            if self.__is_proj_exist(rid) is False and self.__is_task_exist(rid) is False:
+                # word is already in the wordbank
+                self.__unlock()
+                return False
+            else:
+                aid = self.__get_nex_anno_id()
+                if time_stamp is None:
+                    today = date.today()
+                    time_stamp = today.strftime("%Y-%m-%d %H:%M:%S")
+                query_str = "INSERT INTO ANNOTATION (AID, RID, Annotation, Type, TimeStamp) VALUES ('%s', '%s', '%s', %i, '%s')" % (aid, rid, annotation, anno_type, time_stamp)
+                # print(query_str)
+                result = self.__cursor.execute(query_str).fetchone()
+            self.__unlock()
+            return result #.fetchone()
 
 
 
-
+    def empty_line(self):
+        ################################################################
+        pass
     def get_word(self, word):
         if self.__is_locked():
             # print('db is locked')
@@ -271,16 +332,30 @@ if __name__ == '__main__':
     print("Start TaskCenter test")
     taskC = TaskCenter()
     taskC.connect()
+
+    print("################################################################")
+    print("#### Projects Test")
+    print("################################################################")
     taskC.insert_project("proj 1", "dsc123")
     taskC.insert_project("proj 2", "dsc123")
     projects = taskC.quer_for_all_project()
-    print("Projects")
     print(projects)
 
+    print("################################################################")
+    print("#### Task Test")
+    print("################################################################")
     taskC.insert_task('P00000000',"task 1 ", "task dsc")
     taskC.insert_task('P00000001',"task 1 ", "task dsc")
     taskC.insert_task('P00000002',"task 1 ", "task dsc")
     task = taskC.quer_for_all_task()
-    print("Task")
     print(task)
+
+    print("################################################################")
+    print("#### Anno Test")
+    print("################################################################")
+    taskC.insert_annotation('P00000000',"project annotation ", anno_type=0)
+    taskC.insert_annotation('T00000000',"task annotation ", anno_type=1)
+    task = taskC.quer_for_all_annotation()
+    print(task)
+
     taskC.close()
