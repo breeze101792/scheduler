@@ -7,14 +7,32 @@ class DebugLevel:
     WARNING     = 0x4
     INFOMATION  = 0x8
     DEBUG       = 0x10
+    TRACE       = 0x10
     MAX         = 0xff
 
 class RetValue:
     ERROR = -1
     SUCCESS = 0
+
+# test funcion could sync all ins
+class Test(object):
+
+    _i = 3
+
+    @property
+    def i(self):
+        return type(self)._i
+
+    @i.setter
+    def i(self,val):
+        type(self)._i = val
+
 # TODO REMOVE this var
 debug_level = DebugLevel.CRITICAL | DebugLevel.ERROR | DebugLevel.INFOMATION
-# debug_level = DebugLevel.MAX
+debug_level = DebugLevel.MAX
+def dbg_trace(*args):
+    if debug_level & DebugLevel.TRACE > 0:
+        dbgprint("[Trace]", *args)
 def dbg_debug(*args):
     if debug_level & DebugLevel.DEBUG > 0:
         dbgprint("[Debug]", *args)

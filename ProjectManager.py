@@ -1,13 +1,13 @@
 from Project import *
 from Task import *
 from Annotation import *
-from TaskCenter import *
+from HalDB import *
 
-class Project:
+# PM will only handle all hal databse's access, and provide the api for upper layer to get data.
+
+class ProjectManager:
     # (PID TEXT, Name CHAR(255), Description VARCHAR , StartDate date)''')
     def __init__(self):
-        pass
-    def set_filter(self):
-        pass
+        self.__db = HalDB()
     def __str__(self):
-        print("Porject")
+        print("PorjectManager")
