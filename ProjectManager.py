@@ -11,3 +11,5 @@ class ProjectManager:
         self.__db = HalDB()
     def __str__(self):
         print("PorjectManager")
+    def add_project(self, proj_ins):
+        print(proj_ins)

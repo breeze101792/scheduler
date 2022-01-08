@@ -171,6 +171,17 @@ class TaskDB:
             result = self.__cursor.execute(query_str)
             self.__unlock()
             return result.fetchall()
+    def query_annotation_list_by_task_id(self, tid):
+        if self.__is_locked():
+            # print('db is locked')
+            return False
+        else:
+            self.__lock()
+            query_str = "SELECT * FROM ANNOTATION WHERE TID == '%s'" % tid
+            result = self.__cursor.execute(query_str)
+            self.__unlock()
+            # print(result.fetchall())
+            return result.fetchall()
     def __get_nex_proj_id(self):
         self.__lock()
         query_str = "SELECT COUNT(PID) FROM PROJECT"

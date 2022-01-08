@@ -7,12 +7,13 @@ from Project import *
 from Task import *
 from Annotation import *
 
+from ProjectManager import *
 # User for some basic function including add/modify
 class Operator:
     # (PID TEXT, Name CHAR(255), Description VARCHAR , StartDate date)''')
     # (TID TEXT, PID TEXT, Name CHAR(255), Description VARCHAR DEFAULT "", Status INT DEFAULT 0, Priority INT DEFAULT 0, StartDate DATETIME DEFAULT "0001-01-01", DueDate DATETIME DEFAULT "0001-01-01", EndDate DATETIME DEFAULT "0001-01-01")''')
     def __init__(self):
-        pass
+        self.__pm = ProjectManager()
     def __str__(self):
         print("Porject")
     def __date_parser(self, date_name, enable_time=True):
@@ -52,12 +53,13 @@ class Operator:
         arg_key = list(arg_dict.keys())
         print(arg_dict)
         if arg_dict[arg_key[1]] == "project" or arg_dict[arg_key[1]] == "proj":
+            # add proj name:test due:eod
             print("Project")
             new_proj=Project()
             new_proj.name=arg_dict['name']
             new_proj.description=arg_dict['description']
             new_proj.startDate=self.__date_parser(arg_dict['start'])
-            print(new_proj)
+            self.__pm(new_proj)
         elif arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno":
             print("Annotation")
             new_anno=Annotation()
