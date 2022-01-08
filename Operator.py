@@ -16,37 +16,37 @@ class Operator:
         self.__pm = ProjectManager()
     def __str__(self):
         print("Porject")
-    def __date_parser(self, date_name, enable_time=True):
-        if  enable_time is True:
-            time_fmt="%Y-%m-%d %H:%M:%S"
-        else:
-            time_fmt="%Y-%m-%d"
+    # def __date_parser(self, date_name, enable_time=True):
+    #     if  enable_time is True:
+    #         time_fmt="%Y-%m-%d %H:%M:%S"
+    #     else:
+    #         time_fmt="%Y-%m-%d"
 
-        target_date=date_name
-        if date_name == "eow":
-            tmp_datetime = date.today()
-            weekday_idx = (tmp_datetime.weekday() + 1) % 7 
-            friday = tmp_datetime + timedelta(5 - weekday_idx)
-            target_date = friday.strftime(time_fmt)
-        elif date_name == "lw" or date_name == "lastfriday" :
-            tmp_datetime = date.today()
-            weekday_idx = (tmp_datetime.weekday() + 1) % 7 
-            friday = tmp_datetime - timedelta(weekday_idx + (7 - 5))
-            target_date = friday.strftime(time_fmt)
-        elif date_name == "nw":
-            tmp_datetime = date.today()
-            weekday_idx = (tmp_datetime.weekday() + 1) % 7 
-            friday = tmp_datetime - timedelta(weekday_idx + (7 - 5))
-            target_date = friday.strftime(time_fmt)
-        elif date_name == "today":
-            tmp_datetime = date.today()
-            target_date = tmp_datetime.strftime(time_fmt)
-        elif date_name == "now":
-            tmp_datetime = datetime.now()
-            target_date = tmp_datetime.strftime(time_fmt)
-        else:
-            pass
-        return target_date
+    #     target_date=date_name
+    #     if date_name == "eow":
+    #         tmp_datetime = date.today()
+    #         weekday_idx = (tmp_datetime.weekday() + 1) % 7 
+    #         friday = tmp_datetime + timedelta(5 - weekday_idx)
+    #         target_date = friday.strftime(time_fmt)
+    #     elif date_name == "lw" or date_name == "lastfriday" :
+    #         tmp_datetime = date.today()
+    #         weekday_idx = (tmp_datetime.weekday() + 1) % 7 
+    #         friday = tmp_datetime - timedelta(weekday_idx + (7 - 5))
+    #         target_date = friday.strftime(time_fmt)
+    #     elif date_name == "nw":
+    #         tmp_datetime = date.today()
+    #         weekday_idx = (tmp_datetime.weekday() + 1) % 7 
+    #         friday = tmp_datetime - timedelta(weekday_idx + (7 - 5))
+    #         target_date = friday.strftime(time_fmt)
+    #     elif date_name == "today":
+    #         tmp_datetime = date.today()
+    #         target_date = tmp_datetime.strftime(time_fmt)
+    #     elif date_name == "now":
+    #         tmp_datetime = datetime.now()
+    #         target_date = tmp_datetime.strftime(time_fmt)
+    #     else:
+    #         pass
+    #     return target_date
     def add(self, args):
         # dbg_trace(args)
         arg_dict = ArgParser.args_parser(args)

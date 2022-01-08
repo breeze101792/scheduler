@@ -7,8 +7,9 @@ from HalDB import *
 
 class ProjectManager:
     # (PID TEXT, Name CHAR(255), Description VARCHAR , StartDate date)''')
+    __db = HalDB()
     def __init__(self):
-        self.__db = HalDB()
+        pass
     def __str__(self):
         print("PorjectManager")
     def __date_parser(self, date_name, enable_time=True):
@@ -67,3 +68,7 @@ class ProjectManager:
 
         print(new_anno)
         self.__db.add_annotation_by_task(new_anno, task_ins)
+    def get_project_list(self):
+        return self.__db.get_project_list()
+    def get_task_list(self):
+        return self.__db.get_task_list()
