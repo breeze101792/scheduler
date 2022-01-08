@@ -30,9 +30,9 @@ class ArgParser:
             tmp_list=each_arg.split(":")
 
             if len(tmp_list) == 2:
-                arg_dict[tmp_list[0]] = tmp_list[1]
+                arg_dict[tmp_list[0]] = tmp_list[1].replace("'", '').replace("\"", '')
             elif len(tmp_list) == 1:
-                arg_dict[def_key_prefix+def_key_idx.__str__()] = tmp_list[0]
+                arg_dict[def_key_prefix+def_key_idx.__str__()] = tmp_list[0].replace("'", '').replace("\"", '')
                 def_key_idx=def_key_idx+1
         # print(arg_dict)
         return arg_dict

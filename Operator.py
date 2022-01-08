@@ -55,25 +55,24 @@ class Operator:
         if arg_dict[arg_key[1]] == "project" or arg_dict[arg_key[1]] == "proj":
             # add proj name:test due:eod
             print("Project")
-            new_proj=Project()
-            new_proj.name=arg_dict['name']
-            new_proj.description=arg_dict['description']
-            new_proj.startDate=self.__date_parser(arg_dict['start'])
-            self.__pm(new_proj)
+            self.__pm.add_project(name=arg_dict['name'], description = arg_dict['description'], start_date=arg_dict['start'])
         elif arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno":
             print("Annotation")
-            new_anno=Annotation()
-            new_anno.name=arg_dict['name']
-            new_anno.description=arg_dict['description']
-            new_anno.description=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            print(new_anno)
+            # new_anno=Annotation()
+            # new_anno.name=arg_dict['name']
+            # new_anno.description=arg_dict['description']
+            # new_anno.description=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # print(new_anno)
+
+            self.__pm.add_annotation(task_name=arg_dict['task'], description = arg_dict['description'])
         else:
             print("Task")
-            new_task=Task()
-            new_task.name=arg_dict['name']
-            new_task.description=arg_dict['description']
-            new_task.startDate=self.__date_parser(arg_dict['due'])
-            print(new_task)
+            # arg_project=arg_dict['project']
+            # arg_name=arg_dict['name']
+            # arg_description=arg_dict['description']
+            # arg_startDate=self.__date_parser(arg_dict['due'])
+
+            self.__pm.add_task(proj_name=arg_dict['project'], name=arg_dict['name'], description = arg_dict['description'], status=0, priority=0, start_date=arg_dict['start'], due_date=arg_dict['due'])
 
     def modify(self, args):
         dbg_trace(args)
@@ -87,9 +86,9 @@ if __name__ == '__main__':
     op.add("add project name:test_project_name description:'desc about project' start:lw")
     print("## Task ")
     print("################################################################")
-    op.add("add task name:test_task_name description:'desc about task' due:eow")
+    op.add("add task project:test_project_name name:test_task_name description:'desc about task' start:today due:eow")
     print("## Annotation ")
     print("################################################################")
-    op.add("add anno name:test_task_name description:'desc about task'")
+    op.add("add anno task:test_task_name description:'desc about task'")
     # op.modify(None)
     # op.delete(None)

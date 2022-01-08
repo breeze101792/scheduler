@@ -53,7 +53,7 @@ class HalDB:
         ret = self.task_database.insert_annotation(annotation=anno_ins.annotation, pid=proj_ins.pid, time_stamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         self.task_database.commit()
     def add_annotation_by_task(self, anno_ins, task_ins):
-        ret = self.task_database.insert_annotation(annotation=anno_ins.annotation, pid=task_ins.pid, tid=task_ins.tid, time_stamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        ret = self.task_database.insert_annotation(annotation=anno_ins.description, pid=task_ins.pid, tid=task_ins.tid, time_stamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         self.task_database.commit()
 
 # Project
