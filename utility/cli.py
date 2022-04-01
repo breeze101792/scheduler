@@ -4,9 +4,12 @@ import time
 import subprocess as sp
 import codecs
 import re
+import os
 
 from .debug import *
 from .utils import getch
+
+import traceback
 
 class EUIMode(Enum):
     WORD = auto()
@@ -15,15 +18,59 @@ class EUIMode(Enum):
     LIST = auto()
     MAX = auto()
 
-
 class ArgParser:
+    def __init__(self, args=None):
+        self.__args_dict = None
+        self.__target_keys = None
+
+        # post init
+        if args is not None:
+            self.set_args(args)
+    def __str__(self):
+        print(self.__target_keys)
+    def __getitem__(self, key):
+        dbg_debug("__getitem__")
+        if self.__keytransform__(key) is None:
+            dbg_debug("Return None")
+            return None
+        else:
+            return self.__args_dict[self.__keytransform__(key)]
+    def __keytransform__(self, key):
+        dbg_debug("__keytransform__")
+        if key not in self.keys():
+            dbg_debug("Return None")
+            return None
+        else:
+            return key
+
+    def set_args(self, args):
+        # self.__args_dict = ArgParser.args_parser(args)
+        if args is not None:
+            self.__args_dict = ArgParser.args_parser(args)
+        else:
+            dbg_warning("No args data found.")
+            self.__args_dict = dict()
+
+    def keys(self):
+        return self.__args_dict.keys()
+
+    @property
+    def target_keys_list(self):
+        return self.__target_keys
+    @target_keys_list.setter
+    def target_keys_list(self,val):
+        self.__target_keys = val
+
     @staticmethod
     def args_parser(args):
+
+        # print (args)
         def_key_prefix='arg_'
         def_key_idx=0
         dbg_trace(args)
         arg_dict=dict()
         pattern = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''')
+
         for each_arg in pattern.split(args):
             if each_arg == '' or each_arg == " ":
                 continue
@@ -38,15 +85,16 @@ class ArgParser:
         return arg_dict
 
 class CommandLineInterface:
-    def __init__(self):
+    def __init__(self, promote="cli"):
         #### control vars ###
         self.__flag_running = True
-        self.__promote="cli> "
+        self.__promote=promote + "> "
 
         ### local vars ###
         self.__mode = EUIMode.FILE
         self.__history_list = ['history','help', 'exit']
-        self.__function_dict=dict()
+        self.__function_dict = dict()
+        self.__auto_match = True
 
         ### Function Configs ###
         self.regist_cmd("help", self.__help, "Print help")
@@ -61,12 +109,14 @@ class CommandLineInterface:
         #     self.ui_print_line(" " + each_cmd)
         for each_idx in range(0, len(self.__history_list)):
             self.ui_print_line("% 4d. %s" % (each_idx,  self.__history_list[each_idx]))
+        return True
 
     def __help(self, args):
         self.ui_print_line("Help")
         # print("   under construction")
         for each_key in self.__function_dict.keys():
             self.ui_print_line("  %- 8s: %s" % (each_key, self.__function_dict[each_key][1]))
+        return True
     def set_mode(self, mode):
         self.__mode = mode
 
@@ -77,7 +127,8 @@ class CommandLineInterface:
     def ui_print_line(*args):
         print("".join(map(str,args)), flush=True)
     def __print_line_buffer(self, line_buffer, cursor_shift_idx):
-        trailing_space_nmu=16
+        columns, rows = os.get_terminal_size(0)
+        trailing_space_nmu=columns - len("\r"+self.__promote+line_buffer)
         # self.ui_print("\r"+" "*(len(self.__promote)+len(line_buffer)))
         # self.ui_print("\r                                             ")
         self.ui_print("\r"+self.__promote+line_buffer+trailing_space_nmu*" ")
@@ -89,16 +140,39 @@ class CommandLineInterface:
         self.__function_dict[key_word] = [func_ptr, description]
         # print(self.__function_dict)
     def run_once(self, line_args):
+        func_ret = False
+        if len(line_args) == 0:
+            return True
         line_buffer=line_args
-        cmd_token = line_buffer.split()
+
+        arg_dict = ArgParser.args_parser(line_buffer)
+        # get key only
+        first_key = list(arg_dict.keys())[0]
+        cmd_token = arg_dict[first_key]
+
         for each_key in self.__function_dict.keys():
-            if each_key == cmd_token[0]:
-                self.__function_dict[each_key][0](cmd_token)
-                break
+            if each_key == cmd_token or \
+                    (self.__auto_match is True and len(cmd_token) >= 4 and cmd_token[:4] == each_key[:4]):
+                dbg_debug("Cmd: ", line_buffer)
+                try:
+                    func_ret = self.__function_dict[each_key][0](arg_dict)
+                except Exception as e:
+
+                    dbg_error("Cmd: ", line_buffer)
+                    dbg_error("Exception: ", e)
+
+                    traceback_output = traceback.format_exc()
+                    dbg_error(traceback_output)
+
+                return func_ret
+        self.ui_print_line("command not found")
+        return func_ret
     def run(self):
         while self.__flag_running == True:
             line_buffer=self.get_line()
-            self.run_once(line_buffer)
+            func_ret = self.run_once(line_buffer)
+            if func_ret is not True:
+                self.ui_print_line('Fail to excute command. Return:', func_ret)
 
     def get_line(self):
         ckey_timestatmp=time.time()
@@ -109,6 +183,7 @@ class CommandLineInterface:
         line_bakup_buffer=""
         esc_dectect=False
         pkey_press=""
+        skip_nkey=0
         history_idx=0
         buffer_cusor_idx=0
 
@@ -120,6 +195,12 @@ class CommandLineInterface:
             key_press = getch()
             ckey_timestatmp=time.time()
 
+            # for skip following keys
+            if skip_nkey > 0 and ckey_timestatmp - pkey_timestatmp < key_timeout:
+                skip_nkey = skip_nkey - 1
+                continue
+
+            ## For future dev
             # print("Key Code: ", key_press.encode("ascii"))
 
             # special key press
@@ -143,8 +224,14 @@ class CommandLineInterface:
             elif key_press == chr(0x7f):
                 # backspace
                 # print("test")
-                tmp_idx=len(line_buffer)-buffer_cusor_idx-1
-                line_buffer = line_buffer[:tmp_idx] + line_buffer[tmp_idx + 1:]
+                # print("info", len(line_buffer), buffer_cusor_idx)
+                if len(line_buffer) > buffer_cusor_idx:
+                    tmp_idx=len(line_buffer)-(buffer_cusor_idx + 1)
+                    line_buffer = line_buffer[:tmp_idx] + line_buffer[tmp_idx + 1:]
+                # else:
+                #     tmp_idx=len(line_buffer)-(buffer_cusor_idx + 1)
+
+
                 # self.ui_print_line('')
                 # self.ui_print_line("Start: " + line_buffer[:tmp_idx])
                 # self.ui_print_line("End: " + line_buffer[tmp_idx:] )
@@ -160,7 +247,7 @@ class CommandLineInterface:
                     if key_press == 'D':
                         # return('left')
                         # self.ui_print_line("Cursor Idx: ",buffer_cusor_idx)
-                        if len(line_buffer) > buffer_cusor_idx + 1:
+                        if len(line_buffer) >= buffer_cusor_idx + 1:
                             buffer_cusor_idx=buffer_cusor_idx + 1
                             self.__print_line_buffer(line_buffer, buffer_cusor_idx)
                         # elif 1 == buffer_cusor_idx:
@@ -197,6 +284,35 @@ class CommandLineInterface:
                             history_idx=history_idx - 1
                             line_buffer = line_bakup_buffer
                         self.__print_line_buffer(line_buffer, buffer_cusor_idx)
+                    elif key_press == '3':
+                        # FIXME This is not real key, only detect first 3 code
+                        # Del
+                        # print("Del Key")
+                        skip_nkey = 1
+                        if buffer_cusor_idx > 0:
+                            tmp_idx=len(line_buffer)-(buffer_cusor_idx)
+                            line_buffer = line_buffer[:tmp_idx] + line_buffer[tmp_idx + 1:]
+                            buffer_cusor_idx = buffer_cusor_idx - 1
+
+                        # self.ui_print_line('')
+                        # self.ui_print_line("Start: " + line_buffer[:tmp_idx])
+                        # self.ui_print_line("End: " + line_buffer[tmp_idx:] )
+                        self.__print_line_buffer(line_buffer, buffer_cusor_idx)
+                    elif key_press == '1':
+                        # FIXME This is not real key, only detect first 3 code
+                        # Home
+                        # print("Home Key")
+                        skip_nkey = 1
+                        buffer_cusor_idx = len(line_buffer)
+                        self.__print_line_buffer(line_buffer, buffer_cusor_idx)
+                    elif key_press == '4':
+                        # FIXME This is not real key, only detect first 3 code
+                        # End
+                        # print("End Key")
+                        skip_nkey = 1
+                        buffer_cusor_idx = 0
+                        self.__print_line_buffer(line_buffer, buffer_cusor_idx)
+
                 esc_dectect=False
                 pkey_press=''
                 continue
@@ -210,12 +326,20 @@ class CommandLineInterface:
                 self.ui_print("\n")
                 break
             else:
-                line_buffer=line_buffer+key_press
-                self.__print_line_buffer(line_buffer, buffer_cusor_idx)
                 # update buffer
+                tmp_idx=len(line_buffer)-(buffer_cusor_idx)
+                line_buffer = line_buffer[:tmp_idx] + key_press + line_buffer[tmp_idx:]
+
+                # debug
+                # print("\nbuffer_idx", buffer_cusor_idx, "Buffer len", len(line_buffer), "buffer", line_buffer)
+                # print('\n{}'.format(line_buffer))
+
+                # update console
+                self.__print_line_buffer(line_buffer, buffer_cusor_idx)
                 continue
         self.__history_list.append(line_buffer)
         # self.ui_print_line(self.__history_list)
+        # self.ui_print_line(self.line_buffer)
         return line_buffer
     # def start_thread(self):
     #     x = threading.Thread(target=self.key_press, args=(0,))
@@ -231,9 +355,20 @@ class CommandLineInterface:
     #             # self.ui_print_line(psettings.get('msg_exit'))
     #             return
 
+def args_test_function(args):
+    print("cmd: ", args)
+    if  len(args) == 1:
+        print("Only one args")
+        # args = "add task project:test_project_name name:test_task_name description:'desc about task' start:today due:eow"
+        # args = "add task project:test_project_name name:test_task_name"
+        args = "add task project:test_project_name"
+    args_parser = ArgParser(args = args)
+    for each_key in args_parser.keys():
+        print(each_key ,":", args_parser[each_key])
 
 if __name__ == '__main__':
     debug_level=DebugLevel.MAX
     test_cli = CommandLineInterface()
     test_cli.set_mode(EUIMode.INTERCTIVE)
+    test_cli.regist_cmd("args", args_test_function, description="test function for args")
     test_cli.run()
