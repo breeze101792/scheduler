@@ -18,10 +18,11 @@ class Reporter:
     def info(self, args):
         dbg_trace(args)
     def list(self, args):
-        # dbg_trace(args)
-        arg_dict = ArgParser.args_parser(args)
+        dbg_trace(args)
+        # arg_dict = ArgParser.args_parser(args)
+        arg_dict = args
         arg_key = list(arg_dict.keys())
-        if arg_dict[arg_key[1]] == "project" or arg_dict[arg_key[1]] == "proj":
+        if len(arg_dict) > 1 and (arg_dict[arg_key[1]] == "project" or arg_dict[arg_key[1]] == "proj"):
             # add proj name:test due:eod
             print("Project")
             project_list = self.__pm.get_project_list()
@@ -32,13 +33,13 @@ class Reporter:
         #     print("Task")
         #     self.__pm.get_task_list()
         else:
-            print("Task")
+            print("Default: Task")
             task_list = self.__pm.get_task_list()
             for each_task in task_list:
                 print(each_task)
 if __name__ == '__main__':
     rp = Reporter()
     print("## Project ")
-    rp.list('list project')
+    rp.list(['list', 'project=test'])
     print("## Task ")
-    rp.list('list task')
+    rp.list(['list', 'task=test'])

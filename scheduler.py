@@ -12,6 +12,8 @@ from Reporter import *
 # from utility.debug import *
 from utility.cli import *
 
+def echo(args):
+    dbg_info(args)
 def main():
     parser = OptionParser(usage='Usage: Scheduler [options] ......')
     # parser.add_option("-i", "--interactive", dest="interactive",
@@ -60,6 +62,9 @@ def main():
         sched_cli.regist_cmd("info", rp.info, "Show current status of working projects")
         sched_cli.regist_cmd("weekly", rp.weekly, "Show report of last week")
         sched_cli.regist_cmd("list", rp.list, "list current todo list")
+
+        # debug
+        sched_cli.regist_cmd("echo", echo, "Echo Command")
 
         sched_cli.run()
     except (OSError, KeyboardInterrupt):
