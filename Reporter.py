@@ -3,6 +3,7 @@ from utility.cli import *
 
 from ProjectManager import *
 
+from utility.debug import *
 
 # User for some basic function including add/modify
 
@@ -15,28 +16,62 @@ class Reporter:
         print("Reporter")
     def weekly(self, args):
         dbg_trace(args)
+        return True
     def info(self, args):
         dbg_trace(args)
+        return True
+    def __list_proj(self, args):
+        arg_dict = args
+        arg_key = list(arg_dict.keys())
+        # add proj name:test due:eod
+        dbg_debug("List Project")
+        project_list = self.__pm.get_project_list()
+        for each_project in project_list:
+            dbg_debug(each_project)
+        return True
+    def __list_task(self, args):
+        arg_dict = args
+        arg_key = list(arg_dict.keys())
+        # add proj name:test due:eod
+        dbg_debug("List Task")
+        task_list = self.__pm.get_task_list()
+        for each_task in task_list:
+            dbg_debug(each_task)
+        return True
+    def __list_anno(self, args):
+        arg_dict = args
+        arg_key = list(arg_dict.keys())
+
+        dbg_debug("List Anno")
+
+        if 'task' not in arg_key:
+            dbg_debug('No task name specified.')
+            return False
+        else:
+            task_name=arg_dict['task']
+
+        anno_list = self.__pm.get_annotation_list(task_name)
+        for each_anno in anno_list:
+            dbg_debug(each_anno)
+
+        return True
     def list(self, args):
+        func_ret = False
         dbg_trace(args)
         # arg_dict = ArgParser.args_parser(args)
         arg_dict = args
         arg_key = list(arg_dict.keys())
-        if len(arg_dict) > 1 and (arg_dict[arg_key[1]] == "project" or arg_dict[arg_key[1]] == "proj"):
-            # add proj name:test due:eod
-            print("Project")
-            project_list = self.__pm.get_project_list()
-            for each_project in project_list:
-                print(each_project)
-            # self.__pm.
-        # elif arg_dict[arg_key[1]] == "task":
-        #     print("Task")
-        #     self.__pm.get_task_list()
+        if len(arg_dict) > 1:
+            if (arg_dict[arg_key[1]] == "project" or arg_dict[arg_key[1]] == "proj"):
+                func_ret = self.__list_proj(args)
+            elif arg_dict[arg_key[1]] == "task":
+                func_ret = self.__list_task(args)
+            elif (arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno"):
+                func_ret = self.__list_anno(args)
         else:
-            print("Default: Task")
-            task_list = self.__pm.get_task_list()
-            for each_task in task_list:
-                print(each_task)
+            dbg_debug("List Default: Task")
+            func_ret = self.__list_task(args)
+        return func_ret
 if __name__ == '__main__':
     rp = Reporter()
     print("## Project ")

@@ -5,6 +5,7 @@ class Annotation:
     __tid=""
     __pid=""
     __description=""
+    __type=""
     __timeStamp=""
 
     @property
@@ -26,6 +27,12 @@ class Annotation:
     def pid(self,val):
         self.__pid = val
     @property
+    def type(self):
+        return self.__type
+    @type.setter
+    def type(self,val):
+        self.__type = val
+    @property
     def description(self):
         return self.__description
     @description.setter
@@ -42,4 +49,4 @@ class Annotation:
         pass
 
     def __str__(self):
-        return "Annotation: %s, %s, %s, %s" % (self.__tid, self.__pid,self.__description, self.__timeStamp)
+        return "Annotation Ins: %s, %s, %s, %s, %s" % (self.__aid,self.__description,self.__tid, self.__pid, self.__timeStamp)

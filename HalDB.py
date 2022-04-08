@@ -36,6 +36,17 @@ class HalDB:
             tmp_task.endDate     = dblist[7]
             tmp_task.dueDate     = dblist[8]
         return tmp_task
+    def __dblist_to_anno(self, dblist):
+        # print(dblist)
+        tmp_anno = Annotation()
+        if dblist is not None:
+            tmp_anno.aid         = dblist[0]
+            tmp_anno.description = dblist[1]
+            tmp_anno.pid         = dblist[2]
+            tmp_anno.tid         = dblist[3]
+            tmp_anno.type        = dblist[4]
+            tmp_anno.timeStamp   = dblist[5]
+        return tmp_anno
 # Add Function
 ################################################################
 
@@ -76,7 +87,13 @@ class HalDB:
 # Task
 ################################################################
     def get_task_list(self):
-        return self.task_database.query_for_all_task()
+        task_list = []
+        for each_task in self.task_database.query_for_all_task():
+            tmp_task = self.__dblist_to_task(each_task)
+            task_list.append(tmp_task)
+
+        # print(task_list)
+        return task_list
 
     # def get_task_by_id(self, tid):
     #     tmp_task_raw = self.task_database.query_task_by_id(tid)
@@ -99,7 +116,11 @@ class HalDB:
     def get_annotation_list(self):
         return self.task_database.query_for_all_annotation()
     def get_annotation_list_by_task(self, task_ins):
-        return self.task_database.query_annotation_list_by_task_id(task_ins.tid)
+        anno_list = []
+        anno_list_raw = self.task_database.query_annotation_list_by_task_id(task_ins.tid)
+        for each_raw_anno in anno_list_raw:
+            anno_list.append(self.__dblist_to_anno(each_raw_anno))
+        return anno_list
     # def get_annotation_list_by_task_name(self):
     #     return self.task_database.query_for_all_annotation()
 

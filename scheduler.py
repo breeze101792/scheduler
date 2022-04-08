@@ -52,7 +52,7 @@ def main():
     ################################################################
     try:
         # dbg_info("Test")
-        sched_cli = CommandLineInterface()
+        sched_cli = CommandLineInterface(promote="sched")
         op = Operator()
         sched_cli.regist_cmd("add", op.add, "Add project/Task/Annotation")
         sched_cli.regist_cmd("modify", op.modify, "Modify project/Task/Annotation")

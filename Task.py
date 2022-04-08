@@ -9,11 +9,52 @@ class Status(Enum):
     PENDING  = auto()
     COMPLETE = auto()
     MAX      = auto()
+    @staticmethod
+    def to_string(status):
+        # print("Status: ", status)
+        try:
+            if Status.NEW == Status(status):
+                return "NEW"
+            elif Status.ONGOING == Status(status):
+                return "ONGOING"
+            elif Status.DELETE == Status(status):
+                return "DELETE"
+            elif Status.WAITING == Status(status):
+                return "WAITING"
+            elif Status.PENDING == Status(status):
+                return "PENDING"
+            elif Status.COMPLETE == Status(status):
+                return "COMPLETE"
+            else:
+                return "UNKNOWN"
+        except ValueError as e:
+                return "UNKNOWN"
+        except:
+            raise
+
+
 class Priority(Enum):
     LOW    = auto()
     MEDIUM = auto()
     HIGHT  = auto()
     MAX    = auto()
+    @staticmethod
+    def to_string(priority):
+        # print("Priority: ", priority, Priority.LOW)
+        try:
+            if Priority.LOW == Priority(priority):
+                return "LOW"
+            elif Priority.MEDIUM == Priority(priority):
+                return "MEDIUM"
+            elif Priority.HIGHT == Priority(priority):
+                return "HIGHT"
+            else:
+                return "UNKNOWN"
+        except ValueError as e:
+                return "UNKNOWN"
+        except:
+            raise
+
 
 class Task:
     # (TID TEXT, PID TEXT, Name CHAR(255), Description VARCHAR DEFAULT "", Status INT DEFAULT 0, Priority INT DEFAULT 0, StartDate DATETIME DEFAULT "0001-01-01", DueDate DATETIME DEFAULT "0001-01-01", EndDate DATETIME DEFAULT "0001-01-01")''')
@@ -86,4 +127,4 @@ class Task:
         pass
 
     def __str__(self):
-        return "Task: %s, %s, %s, %s, %d, %d, %s, %s, %s" % (self.__tid, self.__pid,self.__name,self.__description,self.__status,self.__priority,self.__startDate,self.__dueDate,self.__endDate)
+        return "Task Ins: %s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.__tid, self.__pid,self.__name,self.__description,Status.to_string(self.__status),Priority.to_string(self.__priority) ,self.__startDate,self.__dueDate,self.__endDate)

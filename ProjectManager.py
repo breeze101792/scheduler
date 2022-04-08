@@ -66,11 +66,12 @@ class ProjectManager:
         new_anno.description=description
         new_anno.timeStamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        print(new_anno)
+        # print(new_anno)
         self.__db.add_annotation_by_task(new_anno, task_ins)
     def get_project_list(self):
         return self.__db.get_project_list()
     def get_task_list(self, proj_ins = None):
         return self.__db.get_task_list()
-    def get_annotation_list(self, task_ins):
+    def get_annotation_list(self, task_name):
+        task_ins = self.__db.get_task_by_name(task_name)
         return self.__db.get_annotation_list_by_task(task_ins)

@@ -35,4 +35,4 @@ class Project:
     def __init__(self):
         pass
     def __str__(self):
-        return "Porject: %s, %s, %s, %s" % (self.__pid, self.__name, self.__description, self.__startDate)
+        return "Porject Ins: %s, %s, %s, %s" % (self.__pid, self.__name, self.__description, self.__startDate)
