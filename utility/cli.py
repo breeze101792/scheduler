@@ -223,7 +223,7 @@ class CommandLineInterface:
                 if each_key.startswith(pattern) is True:
                     # print(each_key)
                     candict_list.append(each_key)
-        elif len(cmd_token) > 1 and line_buffer.endswith(' ') is False:
+        elif len(cmd_token) > 1:
             # print('auto compolete args', cmd_token, cmd_token[0], cmd_token[-1])
             pattern = cmd_token[-1]
             command = cmd_token[0]
@@ -232,13 +232,17 @@ class CommandLineInterface:
             else:
                 arg_list = list()
             # print('arg_list',arg_list)
-
-            for each_key in arg_list:
-                if each_key.startswith(pattern) is True:
-                    # print(each_key)
-                    candict_list.append(each_key)
-        # else:
-        #     print('No need to complete')
+            if line_buffer.endswith(' ') is False:
+                candict_list = arg_list
+            else:
+                for each_key in arg_list:
+                    if each_key.startswith(pattern) is True:
+                        # print(each_key)
+                        candict_list.append(each_key)
+        elif len(cmd_token) == 1 and cmd_token[0] == '':
+            candict_list = list(self.__function_dict.keys())
+        else:
+            print('No need to complete')
 
         # print(candict_list)
         return candict_list
@@ -287,7 +291,9 @@ class CommandLineInterface:
                 pkey_press=""
                 history_idx=0
                 buffer_cusor_idx=0
+                print()
                 self.__print_line_buffer(line_buffer, buffer_cusor_idx)
+                continue
             elif key_press == chr(0x7f):
                 # backspace
                 # print("test")
@@ -305,6 +311,7 @@ class CommandLineInterface:
                 self.__print_line_buffer(line_buffer, buffer_cusor_idx)
                 continue
             elif key_press == chr(0x09):
+                # print('\n'+line_buffer+'\n')
                 # candict_list = self.__auto_complete(line_buffer)
                 center_idx = len(line_buffer) - buffer_cusor_idx
                 front_buffer = line_buffer[:center_idx]
