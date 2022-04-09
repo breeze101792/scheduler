@@ -232,7 +232,7 @@ class CommandLineInterface:
             else:
                 arg_list = list()
             # print('arg_list',arg_list)
-            if line_buffer.endswith(' ') is False:
+            if line_buffer.endswith(' ') is True:
                 candict_list = arg_list
             else:
                 for each_key in arg_list:
@@ -241,8 +241,8 @@ class CommandLineInterface:
                         candict_list.append(each_key)
         elif len(cmd_token) == 1 and cmd_token[0] == '':
             candict_list = list(self.__function_dict.keys())
-        else:
-            print('No need to complete')
+        # else:
+        #     print('No need to complete')
 
         # print(candict_list)
         return candict_list

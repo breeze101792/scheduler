@@ -54,14 +54,14 @@ def main():
         # dbg_info("Test")
         sched_cli = CommandLineInterface(promote="sched")
         op = Operator()
-        sched_cli.regist_cmd("add", op.add, "Add project/Task/Annotation")
+        sched_cli.regist_cmd("add", op.add, "Add project/Task/Annotation", arg_list=['project', 'task', 'name', 'description'])
         sched_cli.regist_cmd("modify", op.modify, "Modify project/Task/Annotation")
         sched_cli.regist_cmd("delete", op.delete, "Delete project/Task/Annotation")
 
         rp = Reporter()
         sched_cli.regist_cmd("info", rp.info, "Show current status of working projects")
         sched_cli.regist_cmd("weekly", rp.weekly, "Show report of last week")
-        sched_cli.regist_cmd("list", rp.list, "list current todo list")
+        sched_cli.regist_cmd("list", rp.list, "list current todo list", arg_list=['project', 'task'])
 
         # debug
         sched_cli.regist_cmd("echo", echo, "Echo Command")
