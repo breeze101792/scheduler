@@ -67,7 +67,7 @@ class ArgParser:
         # print (args)
         def_key_prefix='arg_'
         def_key_idx=0
-        dbg_trace(args)
+        # dbg_trace(args)
         arg_dict=dict()
         pattern = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''')
 

@@ -47,6 +47,9 @@ def main():
     #     print("Default action")
 
     # open file
+    ## debug settings
+    DebugSetting.debug_level = DebugLevel.MAX
+    dbg_show()
 
     ## Run
     ################################################################

@@ -1,5 +1,5 @@
 from utility.debug import *
-from utility.cli import *
+from utility.cli import CommandLineInterface as cli
 
 from ProjectManager import *
 
@@ -24,40 +24,40 @@ class Reporter:
         arg_dict = args
         arg_key = list(arg_dict.keys())
         # add proj name:test due:eod
-        dbg_debug("List Project")
+        cli.print("List Project")
         project_list = self.__pm.get_project_list()
         for each_project in project_list:
-            dbg_debug(each_project)
+            cli.print(each_project)
         return True
     def __list_task(self, args):
         arg_dict = args
         arg_key = list(arg_dict.keys())
         # add proj name:test due:eod
-        dbg_debug("List Task")
+        cli.print("List Task")
         task_list = self.__pm.get_task_list()
         for each_task in task_list:
-            dbg_debug(each_task)
+            cli.print(each_task)
         return True
     def __list_anno(self, args):
         arg_dict = args
         arg_key = list(arg_dict.keys())
 
-        dbg_debug("List Anno")
+        cli.print("List Anno")
 
         if 'task' not in arg_key:
-            dbg_debug('No task name specified.')
+            dbg_warning('No task name specified.')
             return False
         else:
             task_name=arg_dict['task']
 
         anno_list = self.__pm.get_annotation_list(task_name)
         for each_anno in anno_list:
-            dbg_debug(each_anno)
+            cli.print(each_anno)
 
         return True
     def list(self, args):
         func_ret = False
-        dbg_trace(args)
+        # dbg_trace(args)
         # arg_dict = ArgParser.args_parser(args)
         arg_dict = args
         arg_key = list(arg_dict.keys())
@@ -69,7 +69,7 @@ class Reporter:
             elif (arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno"):
                 func_ret = self.__list_anno(args)
         else:
-            dbg_debug("List Default: Task")
+            # dbg_debug("List Default: Task")
             func_ret = self.__list_task(args)
         return func_ret
 if __name__ == '__main__':
