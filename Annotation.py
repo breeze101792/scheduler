@@ -49,4 +49,4 @@ class Annotation:
         pass
 
     def __str__(self):
-        return "Annotation Ins: %s, %s, %s, %s, %s" % (self.__aid,self.__description,self.__tid, self.__pid, self.__timeStamp)
+        return "Annotation Ins: %s, %s, %s, %s, %s, %s" % (self.__aid,self.__description,self.__tid, self.__pid, self.__type, self.__timeStamp)

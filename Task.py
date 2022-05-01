@@ -1,24 +1,24 @@
 
-from enum import Enum, auto
+from enum import Enum, IntEnum, auto
 
-class Status(Enum):
-    NEW      = auto()
-    ONGOING  = auto()
-    DELETE   = auto()
-    WAITING  = auto()
-    PENDING  = auto()
-    COMPLETE = auto()
-    MAX      = auto()
+class Status(IntEnum):
+    NEW      = 0
+    ONGOING  = 1
+    DELETED  = 2
+    WAITING  = 3
+    PENDING  = 4
+    COMPLETE = 5
+    MAX      = 0xff
     @staticmethod
     def to_string(status):
-        # print("Status: ", status)
+        # print("Status: ", Status(status))
         try:
             if Status.NEW == Status(status):
                 return "NEW"
             elif Status.ONGOING == Status(status):
                 return "ONGOING"
-            elif Status.DELETE == Status(status):
-                return "DELETE"
+            elif Status.DELETED == Status(status):
+                return "DELETED"
             elif Status.WAITING == Status(status):
                 return "WAITING"
             elif Status.PENDING == Status(status):
@@ -33,11 +33,11 @@ class Status(Enum):
             raise
 
 
-class Priority(Enum):
-    LOW    = auto()
-    MEDIUM = auto()
-    HIGHT  = auto()
-    MAX    = auto()
+class Priority(IntEnum):
+    LOW    = 0
+    MEDIUM = 1
+    HIGHT  = 2
+    MAX    = 0xff
     @staticmethod
     def to_string(priority):
         # print("Priority: ", priority, Priority.LOW)

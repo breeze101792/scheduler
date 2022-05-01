@@ -72,21 +72,20 @@ class Operator:
         return True
 
     def __add_anno(self, args):
-        dbg_debug("Add Anno")
         # (AID TEXT, RID TEXT, Annotation CHAR(255), Type INT DEFAULT 1, TimeStamp DATETIME)''')
         arg_dict = args
         arg_key = list(arg_dict.keys())
 
-        if 'annotation' in arg_key:
-            anno_desc=arg_dict['annotation']
-        elif 'anno' in arg_key:
-            anno_desc=arg_dict['anno']
+        if 'description' in arg_key:
+            anno_desc=arg_dict['description']
+        # elif 'anno' in arg_key:
+        #     anno_desc=arg_dict['anno']
         else:
-            dbg_debug('No task project specified.')
+            dbg_error('No description specify.')
             return False
 
         if 'task' not in arg_key:
-            dbg_debug('No task name specified.')
+            dbg_error('No task name specified.')
             return False
         else:
             task_name=arg_dict['task']
@@ -98,7 +97,6 @@ class Operator:
         return True
     def add(self, args):
         func_ret=False
-        dbg_trace(args)
         # arg_dict = ArgParser.args_parser(args)
         arg_dict = args
         arg_key = list(arg_dict.keys())
@@ -108,6 +106,8 @@ class Operator:
             func_ret = self.__add_proj(args)
         elif arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno":
             func_ret = self.__add_anno(args)
+        elif arg_dict[arg_key[1]] == "task":
+            func_ret = self.__add_task(args)
         else:
             func_ret = self.__add_task(args)
 

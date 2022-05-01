@@ -46,7 +46,8 @@ class Reporter:
 
         if 'task' not in arg_key:
             dbg_warning('No task name specified.')
-            return False
+            task_name=None
+            # return False
         else:
             task_name=arg_dict['task']
 
@@ -55,6 +56,37 @@ class Reporter:
             cli.print(each_anno)
 
         return True
+    def __show_proj(self, proj_name):
+        proj_ins = self.__pm.get_project_by_name(proj_name)
+        task_list = self.__pm.get_task_list(proj_name)
+        # cli.print(proj_ins)
+        cli.print("{}: {}".format(proj_ins.name, proj_ins.description))
+        cli.print("Start on {}".format(proj_ins.startDate))
+        for each_task in task_list:
+            cli.print("{}({}): {}".format(each_task.name, each_task.dueDate, each_task.description))
+            # cli.print(each_task)
+        return True
+    def __show_task(self, task_name):
+        task_ins = self.__pm.get_task_by_name(task_name)
+        anno_list = self.__pm.get_annotation_list(task_name)
+        cli.print(task_ins)
+        for each_anno in anno_list:
+            cli.print(each_anno)
+        return True
+
+    def show(self, args):
+        func_ret = False
+        # dbg_trace(args)
+        # arg_dict = ArgParser.args_parser(args)
+        arg_dict = args
+        arg_key = list(arg_dict.keys())
+        if len(arg_dict) > 1:
+            if 'project' in arg_key:
+                func_ret = self.__show_proj(arg_dict['project'])
+            elif 'task' in arg_key:
+                func_ret = self.__show_task(arg_dict['task'])
+        return func_ret
+
     def list(self, args):
         func_ret = False
         # dbg_trace(args)

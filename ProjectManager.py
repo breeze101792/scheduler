@@ -12,6 +12,9 @@ class ProjectManager:
         pass
     def __str__(self):
         print("PorjectManager")
+    def __todo_task_id_map(self, task_id):
+        task_name='test'
+        return task_name
     def __date_parser(self, date_name, enable_time=True):
         if  enable_time is True:
             time_fmt="%Y-%m-%d %H:%M:%S"
@@ -43,20 +46,28 @@ class ProjectManager:
         else:
             pass
         return target_date
-    def add_project(self, name, description, start_date="today"):
+
+################################################################
+################################################################
+####  Add Function
+################################################################
+################################################################
+    def add_project(self, name, description, start_date=None):
         new_proj=Project()
         new_proj.name=name
         new_proj.description=description
-        new_proj.startDate=self.__date_parser(start_date, enable_time=False)
+        new_proj.startDate=self.__date_parser('today', enable_time=False) if start_date is None else self.__date_parser(start_date, enable_time=False)
 
         self.__db.add_project(new_proj)
-    def add_task(self, proj_name, name, description, status, priority, start_date="today", due_date="nw"):
+    def add_task(self, proj_name, name, description, status=None, priority=None, start_date=None, due_date=None):
         proj_ins = self.__db.get_project_by_name(proj_name)
         new_task=Task()
         new_task.name=name
         new_task.description=description
-        new_task.startDate=self.__date_parser(start_date)
-        new_task.dueDate=self.__date_parser(due_date)
+        new_task.status=Status.NEW if status is None else status
+        new_task.priority=Priority.MEDIUM if priority is None else priority
+        new_task.startDate=self.__date_parser('today') if start_date is None else self.__date_parser(start_date)
+        new_task.dueDate=self.__date_parser('today') if due_date is None else self.__date_parser(due_date)
 
         self.__db.add_task(new_task, proj_ins)
     def add_annotation(self, task_name, description):
@@ -68,10 +79,41 @@ class ProjectManager:
 
         # print(new_anno)
         self.__db.add_annotation_by_task(new_anno, task_ins)
+################################################################
+################################################################
+####  Get Function
+################################################################
+################################################################
+    def get_project_by_id(self, pid):
+        dbg_error('Not implement yet.')
+    def get_project_by_name(self, name):
+        return self.__db.get_project_by_name(name)
+    def get_task_by_id(self, tid):
+        dbg_error('Not implement yet.')
+    def get_task_by_name(self, name):
+        return self.__db.get_task_by_name(name)
+    def get_annotation_by_id(self, aid):
+        dbg_error('Not implement yet.')
+
     def get_project_list(self):
         return self.__db.get_project_list()
-    def get_task_list(self, proj_ins = None):
-        return self.__db.get_task_list()
-    def get_annotation_list(self, task_name):
-        task_ins = self.__db.get_task_by_name(task_name)
-        return self.__db.get_annotation_list_by_task(task_ins)
+    def get_task_list(self, proj_name = None):
+        if proj_name is None:
+            return self.__db.get_task_list()
+        else:
+            proj_ins = self.__db.get_project_by_name(proj_name)
+            return self.__db.get_task_list_by_proj(proj_ins)
+
+    def get_annotation_list(self, task_name = None):
+        if task_name is None:
+            return self.__db.get_annotation_list()
+        else:
+            task_ins = self.__db.get_task_by_name(task_name)
+            return self.__db.get_annotation_list_by_task(task_ins)
+################################################################
+################################################################
+####  update Function
+################################################################
+################################################################
+
+
