@@ -47,12 +47,14 @@ def main():
     # else:
     #     print("Default action")
 
-    # open file
-    ## debug settings
-    # DebugSetting.debug_level = DebugLevel.MAX
-    # DebugSetting.debug_level = DebugLevel.MAX
-    DebugSetting.debug_level = DebugLevel.CRITICAL | DebugLevel.ERROR | DebugLevel.WARNING | DebugLevel.DEBUG | DebugLevel.INFOMATION
-    # DebugSetting.dbg_show()
+    if options.debug is True:
+        # psettings.set('file_name', options.file_name)
+        DebugSetting.debug_level = DebugLevel.CRITICAL | DebugLevel.ERROR | DebugLevel.WARNING | DebugLevel.DEBUG | DebugLevel.INFOMATION
+        ## debug settings
+        # DebugSetting.debug_level = DebugLevel.MAX
+        # DebugSetting.debug_level = DebugLevel.MAX
+        # DebugSetting.dbg_show()
+        # open file
 
     ## Run
     ################################################################
