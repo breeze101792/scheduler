@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
+
+## CLI
+################################################################
 # system function
 from optparse import OptionParser
-
 from Project import *
 from Task import *
 from Annotation import *
-
 from Operator import *
 from Reporter import *
+
+## GUI
+################################################################
+from core.core import *
 
 # from utility.debug import *
 from utility.cli import *
@@ -23,6 +28,8 @@ def main():
             help="add project", action="store")
     parser.add_option("-t", "--task", dest="task",
             help="add task", action="store")
+    parser.add_option("-c", "--cli", dest="cli",
+            help="Start Command line interface", action="store_true")
     parser.add_option("-a", "--annotation", dest="annotation",
             help="add annotation", action="store")
     ################################################################
@@ -59,24 +66,30 @@ def main():
     ## Run
     ################################################################
     try:
-        # dbg_info("Test")
-        CommandLineInterface.print('Scheduler')
-        sched_cli = CommandLineInterface(promote="sched")
-        op = Operator()
-        sched_cli.regist_cmd("add", op.add, "Add project/Task/Annotation", arg_list=['project', 'task', 'annotation', 'name', 'description'])
-        # sched_cli.regist_cmd("modify", op.modify, "Modify project/Task/Annotation")
-        # sched_cli.regist_cmd("delete", op.delete, "Delete project/Task/Annotation")
+        if options.cli is True:
+            # dbg_info("Test")
+            CommandLineInterface.print('Scheduler')
+            sched_cli = CommandLineInterface(promote="sched")
+            op = Operator()
+            sched_cli.regist_cmd("add", op.add, "Add project/Task/Annotation", arg_list=['project', 'task', 'annotation', 'name', 'description'])
+            # sched_cli.regist_cmd("modify", op.modify, "Modify project/Task/Annotation")
+            # sched_cli.regist_cmd("delete", op.delete, "Delete project/Task/Annotation")
 
-        rp = Reporter()
-        # sched_cli.regist_cmd("info", rp.info, "Show current status of working projects")
-        sched_cli.regist_cmd("weekly", rp.weekly, "Show report of last week")
-        sched_cli.regist_cmd("list", rp.list, "list current todo list", arg_list=['project', 'task', 'annotation'])
-        sched_cli.regist_cmd("show", rp.show, "show specify task", arg_list=['project', 'task'])
+            rp = Reporter()
+            # sched_cli.regist_cmd("info", rp.info, "Show current status of working projects")
+            sched_cli.regist_cmd("weekly", rp.weekly, "Show report of last week")
+            sched_cli.regist_cmd("list", rp.list, "list current todo list", arg_list=['project', 'task', 'annotation'])
+            sched_cli.regist_cmd("show", rp.show, "show specify task", arg_list=['project', 'task'])
 
-        # debug
-        sched_cli.regist_cmd("echo", echo, "Echo Command")
+            # debug
+            sched_cli.regist_cmd("echo", echo, "Echo Command")
 
-        sched_cli.run()
+            sched_cli.run()
+        else:
+            dbg_info("Scheduler")
+            core = Core()
+            core.start()
+
     except (OSError, KeyboardInterrupt):
         print("Bye")
     except:
