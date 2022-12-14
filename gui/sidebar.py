@@ -12,7 +12,7 @@ class SideBar(tk.Frame):
 
         ## Gui Setup
         #############################3
-        self.summary_frame = tk.LabelFrame(self, text = 'Summary')
+        self.summary_frame = tk.LabelFrame(self, text = 'Info Bar')
         self.summary_frame.pack(side = 'top', fill=tk.BOTH, expand=True)
 
         self.test = tk.Label(self.summary_frame, text='TODO Task: 12')

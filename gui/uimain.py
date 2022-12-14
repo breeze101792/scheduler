@@ -7,10 +7,11 @@ import threading
 import sys
 import traceback
 
-# from core.aboutwindow import *
 from core.eventhandler import *
 from gui.functionbar import *
 from gui.sidebar import *
+from gui.tabmanager import *
+from gui.aboutwindow import *
 # from core.statusbar import *
 # from setting.settingmanager import *
 
@@ -46,7 +47,7 @@ class UIMain:
 
         # window init
         # self.setting_manager = SettingManager()
-        # self.about = About()
+        self.about = About()
 
         ## Right Click Menu
         #############################3
@@ -82,9 +83,9 @@ class UIMain:
 
         ## Help
         #############
-        # helpmenu = tk.Menu(menu, tearoff = "off")
-        # menu.add_cascade(label='Help', menu=helpmenu)
-        # helpmenu.add_command(label='About', command=self.about.openWindow)
+        helpmenu = tk.Menu(menu, tearoff = "off")
+        menu.add_cascade(label='Help', menu=helpmenu)
+        helpmenu.add_command(label='About', command=self.about.openWindow)
         menu.add_command(label='Exit', command=lambda :self.event_handler.notify(Event.Exit, msg = 'exit'))
 
         ## Function Bar
@@ -92,7 +93,7 @@ class UIMain:
         self.function_bar = FunctionBar(self.event_handler, self.window)
         self.function_bar.grid(row = 0, column = 0, columnspan=2, sticky = tk.W)
 
-        main_frame = tk.Frame(self.window, background='gray')
+        main_frame = tk.Frame(self.window)
         main_frame.grid(row = 1, column = 0, columnspan=2, sticky = 'news')
         ## Side Bar
         #############################3
@@ -100,10 +101,12 @@ class UIMain:
         # self.side_bar.grid(row = 2, column = 1)
         self.side_bar.pack(side = tk.LEFT, fill = tk.Y, expand = False)
 
-        container_frame = tk.Frame(main_frame, background='black')
-        container_frame.pack(side = tk.LEFT, fill = tk.BOTH, expand = True)
+        # container_frame = tk.Frame(main_frame)
+        # container_frame.pack(side = tk.LEFT, fill = tk.BOTH, expand = True)
         # container_frame.grid(row = 1, column = 0, columnspan=2, sticky = 'news')
 
+        self.tab_manager = TabManager(self.event_handler, main_frame)
+        self.tab_manager.pack(side = tk.LEFT, fill = tk.BOTH, expand = True, pady=(10,0))
         # test_label = FunctionBar(self.event_handler, self.window, background='gray')
         # test_label.grid(row = 1, column = 0, sticky = tk.W)
 
@@ -124,7 +127,7 @@ class UIMain:
         self.window.withdraw()
         dbg_info('Quit')
         # self.setting_manager.quit()
-        # self.about.quit()
+        self.about.quit()
         self.window.quit()
     def start(self):
         dbg_info('GUI Start')
