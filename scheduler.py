@@ -65,8 +65,8 @@ def main():
 
     ## Run
     ################################################################
-    try:
-        if options.cli is True:
+    if options.cli is True:
+        try:
             # dbg_info("Test")
             CommandLineInterface.print('Scheduler')
             sched_cli = CommandLineInterface(promote="sched")
@@ -85,14 +85,19 @@ def main():
             sched_cli.regist_cmd("echo", echo, "Echo Command")
 
             sched_cli.run()
-        else:
-            dbg_info("Scheduler")
-            core = Core()
-            core.start()
 
-    except (OSError, KeyboardInterrupt):
-        print("Bye")
-    except:
-        raise
+        except (OSError, KeyboardInterrupt):
+            print("Bye")
+        except:
+            raise
+    else:
+        core = Core()
+        try:
+            dbg_info("Scheduler")
+            core.start()
+        except (OSError, KeyboardInterrupt):
+            print("Bye")
+        finally:
+            core.quit()
 if __name__ == '__main__':
     main()
