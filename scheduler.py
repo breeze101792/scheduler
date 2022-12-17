@@ -4,9 +4,10 @@
 ################################################################
 # system function
 from optparse import OptionParser
-from Project import *
-from Task import *
-from Annotation import *
+from data.project import *
+from data.task import *
+from data.annotation import *
+
 from Operator import *
 from Reporter import *
 

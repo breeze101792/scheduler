@@ -36,9 +36,6 @@ class UIMain:
         # icon = tk.PhotoImage(file="resource/icon.png")
         # self.window.iconphoto(False, icon)
 
-        self.window.protocol("WM_DELETE_WINDOW", self.quit)
-        self.window.geometry("1366x768")
-
         # icon = tk.PhotoImage(file="resource/icon.png")
         # self.window.iconphoto(False, icon)
 

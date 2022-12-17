@@ -1,7 +1,7 @@
 from utility.debug import *
 from utility.cli import CommandLineInterface as cli
 
-from ProjectManager import *
+from data.projectmanager import *
 
 from utility.debug import *
 

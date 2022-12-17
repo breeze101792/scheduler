@@ -1,4 +1,3 @@
-
 from enum import Enum, IntEnum, auto
 
 class Status(IntEnum):

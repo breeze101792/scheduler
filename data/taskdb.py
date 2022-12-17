@@ -2,8 +2,6 @@ import sqlite3
 import os
 from datetime import date
 
-
-
 class TaskDB:
     __db_lock = False
     __db_connection = None

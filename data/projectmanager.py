@@ -1,7 +1,8 @@
-from Project import *
-from Task import *
-from Annotation import *
-from HalDB import *
+from data.project import *
+from data.task import *
+from data.annotation import *
+
+from data.haldb import *
 
 # PM will only handle all hal databse's access, and provide the api for upper layer to get data.
 
