@@ -17,6 +17,11 @@ from gui.aboutwindow import *
 
 from utility.debug import *
 
+from data.project import *
+from data.task import *
+from data.annotation import *
+from data.projectmanager import *
+
 
 class UIMain:
     def __init__(self):
@@ -24,6 +29,7 @@ class UIMain:
         #############################3
         self.event_handler = EventHandler(Event.Max)
         self.event_handler.registEvent(Event.Exit, self.quit, EventHandler.OnAction)
+        self.project_manager = ProjectManager()
 
         ## tk init
         #############################3
@@ -31,7 +37,7 @@ class UIMain:
         self.window.title("Scheduler")
         # self.window.title("Scheduler" + ' V.' + Setting.Version)
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
-        self.window.geometry("1366x768")
+        self.window.geometry("640x480")
 
         # icon = tk.PhotoImage(file="resource/icon.png")
         # self.window.iconphoto(False, icon)
@@ -102,7 +108,7 @@ class UIMain:
         # container_frame.pack(side = tk.LEFT, fill = tk.BOTH, expand = True)
         # container_frame.grid(row = 1, column = 0, columnspan=2, sticky = 'news')
 
-        self.tab_manager = TabManager(self.event_handler, main_frame)
+        self.tab_manager = TabManager(self.event_handler, self.project_manager, main_frame)
         self.tab_manager.pack(side = tk.LEFT, fill = tk.BOTH, expand = True, pady=(10,0))
         # test_label = FunctionBar(self.event_handler, self.window, background='gray')
         # test_label.grid(row = 1, column = 0, sticky = tk.W)
@@ -121,8 +127,8 @@ class UIMain:
             self.window.after(30, self.refresh)
 
     def quit(self, event_msg=None):
-        self.window.withdraw()
         dbg_info('Quit')
+        self.window.withdraw()
         # self.setting_manager.quit()
         self.about.quit()
         self.window.quit()

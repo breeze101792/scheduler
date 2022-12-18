@@ -98,6 +98,7 @@ def main():
             core.start()
         except (OSError, KeyboardInterrupt):
             print("Bye")
+            core.quit()
         finally:
             core.quit()
 if __name__ == '__main__':

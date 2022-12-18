@@ -3,8 +3,10 @@ from data.task import *
 from data.annotation import *
 
 from data.haldb import *
+from utility.debug import *
 
 # PM will only handle all hal databse's access, and provide the api for upper layer to get data.
+# All ids can't use outside data module
 
 class ProjectManager:
     # (PID TEXT, Name CHAR(255), Description VARCHAR , StartDate date)''')
@@ -12,7 +14,7 @@ class ProjectManager:
     def __init__(self):
         pass
     def __str__(self):
-        print("PorjectManager")
+        dbg_info("PorjectManager")
     def __todo_task_id_map(self, task_id):
         task_name='test'
         return task_name

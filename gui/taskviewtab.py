@@ -6,23 +6,25 @@ from core.eventhandler import *
 from xtk.scrollframe import *
 
 class TaskViewTab(tk.Frame):
-    def __init__(self, event_handler, container, *args, **kwargs):
+    def __init__(self, event_handler, project_manager, container, *args, **kwargs):
         super(TaskViewTab, self).__init__(container, *args, **kwargs)
         self.container = container
 
+        ## Vars init
+        #############################3
         self.event_handler = event_handler
         # self.event_handler.registEvent(Event.Record, self.rev_Record, EventHandler.OnAction)
+        self.project_manager = project_manager
+
+
+        ## Gui Setup
+        #############################3
         # self['background'] = 'dark gray'
 
-        ## Frame Setup
-        #############################3
         # Create the VerticalScrolledFrame
         vs_frame = VerticalScrolledFrame(self)
         vs_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.TRUE)
         self.scrollframe = vs_frame.interior
-
-        ## Gui Setup
-        #############################3
         row_cnt = 0
 
         self.ui_name = tk.StringVar(value = '[Task Name]')
@@ -56,4 +58,3 @@ class TaskViewTab(tk.Frame):
     def on_tabClose(self):
         # self.forget()
         self.container.forget(self)
-
