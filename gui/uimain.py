@@ -39,11 +39,8 @@ class UIMain:
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
         self.window.geometry("640x480")
 
-        # icon = tk.PhotoImage(file="resource/icon.png")
-        # self.window.iconphoto(False, icon)
-
-        # icon = tk.PhotoImage(file="resource/icon.png")
-        # self.window.iconphoto(False, icon)
+        icon = tk.PhotoImage(file="resource/schedule_color.png")
+        self.window.iconphoto(False, icon)
 
         self.window.columnconfigure(0, weight=1)
         self.window.rowconfigure(1, weight=1)

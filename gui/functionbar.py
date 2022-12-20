@@ -12,7 +12,10 @@ class FunctionBar(tk.Frame):
 
         ## Gui Setup
         #############################3
-        self.new_button = self.addFunctionBtn('New')
+        self.new_button = self.addFunctionBtn('New Task')
+        self.new_button.pack(side = tk.LEFT, padx = 1, pady = 1)
+
+        self.new_button = self.addFunctionBtn('New Project')
         self.new_button.pack(side = tk.LEFT, padx = 1, pady = 1)
 
         # self.lock_button = tk.Button(self, text = 'Lock', command = self.on_termlock, borderwidth=0, anchor=tk.CENTER, background="light gray", width=6)
