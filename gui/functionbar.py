@@ -12,11 +12,14 @@ class FunctionBar(tk.Frame):
 
         ## Gui Setup
         #############################3
-        self.new_button = self.addFunctionBtn('New Task')
-        self.new_button.pack(side = tk.LEFT, padx = 1, pady = 1)
+        self.new_task_button = self.addFunctionBtn('New', command = self.notify_newTask)
+        self.new_task_button.pack(side = tk.LEFT, padx = 1, pady = 1)
 
-        self.new_button = self.addFunctionBtn('New Project')
-        self.new_button.pack(side = tk.LEFT, padx = 1, pady = 1)
+        # self.new_project_button = self.addFunctionBtn('New Project', command = self.notify_newProject)
+        # self.new_project_button.pack(side = tk.LEFT, padx = 1, pady = 1)
+
+        self.update_button = self.addFunctionBtn('Update', command = self.notify_update)
+        self.update_button.pack(side = tk.LEFT, padx = 1, pady = 1)
 
         # self.lock_button = tk.Button(self, text = 'Lock', command = self.on_termlock, borderwidth=0, anchor=tk.CENTER, background="light gray", width=6)
         # self.lock_button.pack(side = tk.LEFT, padx = 1, pady = 1)
@@ -67,6 +70,15 @@ class FunctionBar(tk.Frame):
             event.widget['foreground'] = foreground
             event.widget['background'] = background
 
+    def notify_update(self):
+        dbg_debug('Notify update')
+        self.event_handler.notify(Event.GUI, Event(Event.GUI, action = 'update'))
+    def notify_newProject(self):
+        dbg_debug('Notify New project')
+        self.event_handler.notify(Event.Project, Event(Event.Project, action = 'new'))
+    def notify_newTask(self):
+        dbg_debug('Notify New task')
+        self.event_handler.notify(Event.Task, Event(Event.Task, action = 'new'))
     # def notify_record(self):
     #     dbg_debug('Notify')
     #     if self.record_button['text'] == 'Stop':

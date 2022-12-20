@@ -1,7 +1,9 @@
 from utility.debug import *
 class Event:
-    Task = 0
-    Status = 1
+    Project = 0
+    Task = 1
+    GUI = 2
+    Status = 3
     Exit = 9
     Max = 10
     def __init__(self, event, action, content = None):

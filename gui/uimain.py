@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 # from mttkinter.mttkinter import *
 
-import serial
 import threading
 import sys
 import traceback
@@ -12,6 +11,7 @@ from gui.functionbar import *
 from gui.sidebar import *
 from gui.tabmanager import *
 from gui.aboutwindow import *
+from gui.addwin import *
 # from core.statusbar import *
 # from setting.settingmanager import *
 
@@ -37,7 +37,7 @@ class UIMain:
         self.window.title("Scheduler")
         # self.window.title("Scheduler" + ' V.' + Setting.Version)
         self.window.protocol("WM_DELETE_WINDOW", self.quit)
-        self.window.geometry("640x480")
+        self.window.geometry("1024x768")
 
         icon = tk.PhotoImage(file="resource/schedule_color.png")
         self.window.iconphoto(False, icon)
@@ -48,6 +48,7 @@ class UIMain:
         # window init
         # self.setting_manager = SettingManager()
         self.about = About()
+        self.add_win = AddWin(self.event_handler)
 
         ## Right Click Menu
         #############################3
@@ -68,7 +69,8 @@ class UIMain:
 
         filemenu = tk.Menu(menu, tearoff = "off")
         menu.add_cascade(label='File', menu=filemenu)
-        filemenu.add_command(label='New')
+        filemenu.add_command(label='New Project', command = lambda : (self.event_handler.notify(Event.Project, Event(Event.Project, action = 'new'))))
+        filemenu.add_command(label='New Task', command = lambda : (self.event_handler.notify(Event.Task, Event(Event.Task, action = 'new'))))
         filemenu.add_command(label='Open...')
         # filemenu.add_command(label='Save log as ...', command=self.on_saveTerminalText)
         filemenu.add_separator()

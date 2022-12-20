@@ -4,7 +4,7 @@ import re
 # from setting.settingmanager import *
 from core.eventhandler import *
 from xtk.scrollframe import *
-from gui.taskviewtab import *
+from gui.tasktab import *
 from gui.tab import *
 
 class TODOTab(tk.Frame, Tab):
@@ -34,6 +34,12 @@ class TODOTab(tk.Frame, Tab):
         ## Event Setup
         #############################3
     def update(self):
+        # reset todo list
+        for each_task in self.scrollframe.winfo_children():
+            each_task.pack_forget()
+            each_task.destroy()
+
+        # add task list
         task_list = self.project_manager.get_task_list()
         dbg_debug('Task List:', task_list)
         for each_task in task_list:
@@ -109,6 +115,6 @@ class TaskSummaryInfo(tk.LabelFrame):
         if self.task_ins is not None:
             self.event_handler.notify(Event.Task, Event(Event.Task, 'open',self.task_ins))
         pass
-        # tmp_task_view = TaskViewTab(self.event_handler, self.project_manager,self)
-        # self.container.add(tmp_task_view, text='TaskView')
+        # tmp_task_tab = TaskTab(self.event_handler, self.project_manager,self)
+        # self.container.add(tmp_task_tab, text='TaskView')
 
