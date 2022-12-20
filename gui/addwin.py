@@ -70,7 +70,8 @@ class NewTaskFrame(tk.LabelFrame):
         project_combox = ttk.Combobox(main_frame, width = 17, textvariable=self.ui_project)
         project_list = [ x.name for x in self.project_manager.get_project_list() ]
         project_combox["values"] = project_list
-        project_combox.set(project_list[0])
+        if len(project_list) != 0:
+            project_combox.set(project_list[0])
 
         # project_combox["state"] = "readonly"
         project_combox.grid(row = row_cnt, column = 1, columnspan=1, sticky = tk.W, padx=5)
