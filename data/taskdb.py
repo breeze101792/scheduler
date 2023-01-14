@@ -1,6 +1,7 @@
 import sqlite3
 import os
 from datetime import date
+from utility.debug import *
 
 class TaskDB:
     __db_lock = False
@@ -36,7 +37,7 @@ class TaskDB:
             # We can also close the connection if we are done with it.
             # Just be sure any changes have been committed or they will be lost.
             conn.close()
-            # print('successful init')
+            dbg_info('db init successfully')
     def __lock(self):
         if self.__db_lock == False:
             self.__db_lock = True
@@ -53,25 +54,27 @@ class TaskDB:
         return self.__db_lock
     def connect(self):
         if self.__is_locked():
-            # print("Database is locked!")
+            dbg_warning("Database is locked!")
             return False
         elif self.__db_connection is None:
+            dbg_info("Database is already connected!")
             self.__lock()
             self.__db_connection = sqlite3.connect(self.__db_file)
             self.__cursor = self.__db_connection.cursor()
             self.__unlock()
             return True
         else:
-            # print("Database is already connected!")
+            dbg_debug("Database is already connected!")
             return True
     def close(self):
         if self.__db_lock:
-            # print('database is locked!\n please unlocked first!')
+            dbg_warning('database is locked!\n please unlocked first!')
             return False
         elif self.__db_connection is None:
-            # print('there is nothing to do!')
+            dbg_debug('db already closed. there is nothing to do!')
             return True
         else:
+            dbg_info('close database')
             self.commit()
             self.__db_connection.close()
             return True
@@ -244,16 +247,16 @@ class TaskDB:
         # (PID UNSIGNED INT, Name CHAR(255), Description VARCHAR , StartDate date)
 
         query_str = "SELECT name FROM PROJECT WHERE Name == '%s'" % name
-        # print(query_str)
+        dbg_debug(query_str)
         if self.__is_locked():
-            print('db is locked')
+            dbg_warning('db is locked')
             return False
         else:
             self.__lock()
             result = self.__cursor.execute(query_str).fetchone()
             # print(result)
             if result is not None:
-                # word is already in the wordbank
+                dbg_warning('{} already exist'.format(name))
                 self.__unlock()
                 return False
             else:

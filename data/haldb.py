@@ -4,6 +4,7 @@ from data.taskdb import *
 from data.project import *
 from data.task import *
 from data.annotation import *
+from utility.debug import *
 
 # Hal layer only need to connect dabase, no need to do compilcated opteration
 

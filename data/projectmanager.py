@@ -61,6 +61,7 @@ class ProjectManager:
         new_proj.description=description
         new_proj.startDate=self.__date_parser('today', enable_time=False) if start_date is None else self.__date_parser(start_date, enable_time=False)
 
+        dbg_debug('New Project:', new_proj)
         self.__db.add_project(new_proj)
     def add_task(self, proj_name, name, description, status=None, priority=None, start_date=None, due_date=None):
         proj_ins = self.__db.get_project_by_name(proj_name)
@@ -72,6 +73,7 @@ class ProjectManager:
         new_task.startDate=self.__date_parser('today') if start_date is None else self.__date_parser(start_date)
         new_task.dueDate=self.__date_parser('today') if due_date is None else self.__date_parser(due_date)
 
+        dbg_debug('New Task:', new_task)
         self.__db.add_task(new_task, proj_ins)
     def add_annotation(self, task_name, description):
         task_ins = self.__db.get_task_by_name(task_name)
@@ -80,7 +82,7 @@ class ProjectManager:
         new_anno.description=description
         new_anno.timeStamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        # print(new_anno)
+        dbg_debug('New Annotation:', new_anno)
         self.__db.add_annotation_by_task(new_anno, task_ins)
 ################################################################
 ################################################################

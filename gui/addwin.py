@@ -37,6 +37,8 @@ class NewProjectFrame(tk.LabelFrame):
         self.ui_description = tk.StringVar(value = '[Project Description]')
         self.description_entry = tk.Entry(main_frame,textvariable=self.ui_description)
         self.description_entry.grid(row = row_cnt, column = 1, columnspan=1, sticky = tk.W)
+    def update(self):
+        pass
 
     @property
     def name(self):
@@ -67,14 +69,14 @@ class NewTaskFrame(tk.LabelFrame):
 
         self.ui_project = tk.StringVar(value = 'Task')
 
-        project_combox = ttk.Combobox(main_frame, width = 17, textvariable=self.ui_project)
+        self.project_combox = ttk.Combobox(main_frame, width = 17, textvariable=self.ui_project)
         project_list = [ x.name for x in self.project_manager.get_project_list() ]
-        project_combox["values"] = project_list
+        self.project_combox["values"] = project_list
         if len(project_list) != 0:
-            project_combox.set(project_list[0])
+            self.ui_project.set(project_list[0])
 
-        # project_combox["state"] = "readonly"
-        project_combox.grid(row = row_cnt, column = 1, columnspan=1, sticky = tk.W, padx=5)
+        # self.project_combox["state"] = "readonly"
+        self.project_combox.grid(row = row_cnt, column = 1, columnspan=1, sticky = tk.W, padx=5)
 
         row_cnt += 1
 
@@ -95,6 +97,11 @@ class NewTaskFrame(tk.LabelFrame):
         self.description_entry.grid(row = row_cnt, column = 1, columnspan=1, sticky = tk.W)
 
         # row_cnt += 1
+    def update(self):
+        project_list = [ x.name for x in self.project_manager.get_project_list() ]
+        self.project_combox["values"] = project_list
+        if len(project_list) != 0:
+            self.ui_project.set(project_list[0])
     @property
     def project(self):
         return self.ui_project.get()
@@ -192,6 +199,9 @@ class AddWin(tk.Toplevel):
         if msg.action == 'new':
             self.ui_type.set('Task')
             self.openWindow()
+    def update(self):
+        self.new_project_frame.update()
+        self.new_task_frame.update()
     def openWindow(self):
         self.deiconify()
     def closeWindow(self):

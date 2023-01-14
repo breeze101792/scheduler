@@ -17,10 +17,11 @@ class TabManager(ttk.Notebook):
 
         ## Gui Setup
         #############################3
-        # todo frames
+        # todo: list todo list
         self.todo_tab = TODOTab(self.event_handler, self.project_manager,self)
         self.todo_tab.pack(side = tk.TOP, fill='both', expand=True)
 
+        # summary: show the summary form the last week, and the current list
         # summary_tab = ScrollableFrame(self)
         summary_tab = ttk.Frame(self)
         summary_tab.pack(side = tk.TOP, fill='both', expand=True)
@@ -35,10 +36,14 @@ class TabManager(ttk.Notebook):
         # self.add(profile_tab, text='Profile')
 
         # self.openTaskView()
-    def openTaskView(self, task = None):
+    def openTaskView(self, task_ins = None):
         tmp_task_tab = TaskTab(self.event_handler, self.project_manager,self)
+        if task_ins is not None:
+            tmp_task_tab.setInstance(task_ins)
+
         self.add(tmp_task_tab, text='TaskView')
     def update(self):
+        # FIXME, update on focus tab
         self.todo_tab.update()
 
     ## Event Setup
