@@ -90,7 +90,7 @@ class ProjectManager:
 ################################################################
 ################################################################
     def get_project_by_id(self, pid):
-        dbg_error('Not implement yet.')
+        return self.__db.get_project_by_id(pid)
     def get_project_by_name(self, name):
         return self.__db.get_project_by_name(name)
     def get_task_by_id(self, tid):

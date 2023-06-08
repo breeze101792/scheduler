@@ -70,10 +70,10 @@ class HalDB:
 
 # Project
 ################################################################
-    # def get_project_by_id(self, pid):
-    #     tmp_proj_raw = self.task_database.query_project_by_id(pid)
-    #     tmp_proj=self.__dblist_to_proj(tmp_proj_raw)
-    #     return tmp_proj
+    def get_project_by_id(self, pid):
+        tmp_proj_raw = self.task_database.query_project_by_id(pid)
+        tmp_proj=self.__dblist_to_proj(tmp_proj_raw)
+        return tmp_proj
     def get_project_by_name(self, proj_name):
         tmp_proj_raw = self.task_database.query_project_by_name(proj_name)
         tmp_proj=self.__dblist_to_proj(tmp_proj_raw)
