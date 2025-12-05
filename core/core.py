@@ -10,7 +10,7 @@ from operation.Operator import *
 from operation.Reporter import *
 
 class SchedCLI(CommandLineInterface):
-    def __init__(self, promote='sched'):
+    def __init__(self, promote='xched'):
         appcgm = AppConfigManager()
 
         welcome_message = (
@@ -33,7 +33,4 @@ class SchedCLI(CommandLineInterface):
         self.regist_cmd("weekly", rp.weekly, "Show report of last week")
         self.regist_cmd("list", rp.list, "list current todo list", arg_list=['project', 'task', 'annotation'])
         self.regist_cmd("show", rp.show, "show specify task", arg_list=['project', 'task'])
-
-        # debug
-        # self.regist_cmd("echo", echo, "Echo Command")
 

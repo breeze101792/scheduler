@@ -6,9 +6,6 @@ from optparse import OptionParser
 from utility.cli import *
 from core.core import SchedCLI
 
-def echo(args):
-    CommandLineInterface.print("Echo: ", args)
-    return True
 def main():
     parser = OptionParser(usage='Usage: Scheduler [options] ......')
     # parser.add_option("-i", "--interactive", dest="interactive",
@@ -31,24 +28,9 @@ def main():
     ################################################################
     (options, args) = parser.parse_args()
 
-    # if options.project is not None:
-    #     # psettings.set('file_name', options.file_name)
-    #     print("Project")
-    # elif options.task is not None: 
-    #     print("Task")
-    # elif options.annotation is not None: 
-    #     print("annotation")
-    # else:
-    #     print("Default action")
 
     if options.debug is True:
-        # psettings.set('file_name', options.file_name)
         DebugSetting.debug_level = DebugLevel.CRITICAL | DebugLevel.ERROR | DebugLevel.WARNING | DebugLevel.DEBUG | DebugLevel.INFOMATION
-        ## debug settings
-        # DebugSetting.debug_level = DebugLevel.MAX
-        # DebugSetting.debug_level = DebugLevel.MAX
-        # DebugSetting.dbg_show()
-        # open file
 
     ## Run
     ################################################################

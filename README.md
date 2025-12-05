@@ -38,7 +38,9 @@ The scheduler provides several commands to manage your data.
 -   `show project=<project_name>`: Shows detailed information about a specific project and its tasks.
 -   `show task=<task_name>`: Shows detailed information about a specific task and its annotations.
 
-### Update and Delete
+## TODO
 
-Update and delete functionalities are not yet implemented.
+* Update and delete functionalities.
+* set default project/task.
+* viewing task/project more efficiently.
 

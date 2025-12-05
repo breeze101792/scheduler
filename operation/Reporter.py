@@ -56,29 +56,29 @@ class Reporter:
         else:
             cli.print("No tasks found.")
         return True
-    def __list_anno(self, args):
-        arg_dict = args
-        arg_key = list(arg_dict.keys())
-
-        cli.print("List Anno")
-
-        if 'task' not in arg_key:
-            dbg_warning('No task name specified. Listing all annotations.')
-            task_name=None
-        else:
-            task_name=arg_dict['task']
-
-        anno_list = self.__pm.get_annotation_list(task_name)
-        if anno_list:
-            anno_headers = ["Annotation ID", "Content", "Timestamp", "Task ID"]
-            anno_data = []
-            for each_anno in anno_list:
-                anno_data.append([each_anno.aid, each_anno.content, each_anno.timestamp, each_anno.tid])
-            cli.print(tabulate(anno_data, headers=anno_headers, tablefmt="fancy_grid"))
-        else:
-            cli.print("No annotations found.")
-
-        return True
+    # def __list_anno(self, args):
+    #     arg_dict = args
+    #     arg_key = list(arg_dict.keys())
+    #
+    #     cli.print("List Anno")
+    #
+    #     if 'task' not in arg_key:
+    #         dbg_warning('No task name specified. Listing all annotations.')
+    #         task_name=None
+    #     else:
+    #         task_name=arg_dict['task']
+    #
+    #     anno_list = self.__pm.get_annotation_list(task_name)
+    #     if anno_list:
+    #         anno_headers = ["Annotation ID", "Content", "Timestamp", "Task ID"]
+    #         anno_data = []
+    #         for each_anno in anno_list:
+    #             anno_data.append([each_anno.aid, each_anno.content, each_anno.timestamp, each_anno.tid])
+    #         cli.print(tabulate(anno_data, headers=anno_headers, tablefmt="fancy_grid"))
+    #     else:
+    #         cli.print("No annotations found.")
+    #
+    #     return True
     def __show_proj(self, proj_name):
         proj_ins = self.__pm.get_project_by_name(proj_name)
         task_list = self.__pm.get_task_list(proj_name)
@@ -107,14 +107,6 @@ class Reporter:
         anno_list = self.__pm.get_annotation_list(task_name)
         
         # Task details
-        # task_headers = ["Name", "Description", "Due Date", "Project"]
-        # task_data = [[
-        #     task_ins.name,
-        #     task_ins.description,
-        #     task_ins.dueDate,
-        #     self.__pm.get_project_by_id(task_ins.pid).name
-        # ]]
-        # cli.print(tabulate(task_data, headers=task_headers, tablefmt="fancy_grid"))
         task_headers = ["Name", "Project", "Description", "Status", "Priority", "Start Date", "Due Date", "End Date"]
         task_data = [[
             task_ins.name,
@@ -169,8 +161,8 @@ class Reporter:
                 func_ret = self.__list_proj(args)
             elif arg_dict[arg_key[1]] == "task":
                 func_ret = self.__list_task(args)
-            elif (arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno"):
-                func_ret = self.__list_anno(args)
+            # elif (arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno"):
+            #     func_ret = self.__list_anno(args)
             else:
                 func_ret = self.__list_proj()
         else:
