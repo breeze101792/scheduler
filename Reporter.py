@@ -4,6 +4,7 @@ from utility.cli import CommandLineInterface as cli
 from ProjectManager import *
 
 from utility.debug import *
+from tabulate import tabulate
 
 # User for some basic function including add/modify
 
@@ -20,23 +21,31 @@ class Reporter:
     def info(self, args):
         dbg_trace(args)
         return True
-    def __list_proj(self, args):
-        arg_dict = args
-        arg_key = list(arg_dict.keys())
+    def __list_proj(self, args = None):
         # add proj name:test due:eod
         cli.print("List Project")
         project_list = self.__pm.get_project_list()
-        for each_project in project_list:
-            cli.print(each_project)
+        if project_list:
+            project_headers = ["Name", "Description", "Start Date"]
+            project_data = []
+            for each_project in project_list:
+                project_data.append([each_project.name, each_project.description, each_project.startDate])
+            cli.print(tabulate(project_data, headers=project_headers, tablefmt="fancy_grid"))
+        else:
+            cli.print("No projects found.")
         return True
-    def __list_task(self, args):
-        arg_dict = args
-        arg_key = list(arg_dict.keys())
+    def __list_task(self, args = None):
         # add proj name:test due:eod
         cli.print("List Task")
         task_list = self.__pm.get_task_list()
-        for each_task in task_list:
-            cli.print(each_task)
+        if task_list:
+            task_headers = ["Name", "Description", "Due Date", "Project ID"]
+            task_data = []
+            for each_task in task_list:
+                task_data.append([each_task.name, each_task.description, each_task.dueDate, each_task.pid])
+            cli.print(tabulate(task_data, headers=task_headers, tablefmt="fancy_grid"))
+        else:
+            cli.print("No tasks found.")
         return True
     def __list_anno(self, args):
         arg_dict = args
@@ -45,33 +54,68 @@ class Reporter:
         cli.print("List Anno")
 
         if 'task' not in arg_key:
-            dbg_warning('No task name specified.')
+            dbg_warning('No task name specified. Listing all annotations.')
             task_name=None
-            # return False
         else:
             task_name=arg_dict['task']
 
         anno_list = self.__pm.get_annotation_list(task_name)
-        for each_anno in anno_list:
-            cli.print(each_anno)
+        if anno_list:
+            anno_headers = ["Annotation ID", "Content", "Timestamp", "Task ID"]
+            anno_data = []
+            for each_anno in anno_list:
+                anno_data.append([each_anno.aid, each_anno.content, each_anno.timestamp, each_anno.tid])
+            cli.print(tabulate(anno_data, headers=anno_headers, tablefmt="fancy_grid"))
+        else:
+            cli.print("No annotations found.")
 
         return True
     def __show_proj(self, proj_name):
         proj_ins = self.__pm.get_project_by_name(proj_name)
         task_list = self.__pm.get_task_list(proj_name)
-        # cli.print(proj_ins)
-        cli.print("{}: {}".format(proj_ins.name, proj_ins.description))
-        cli.print("Start on {}".format(proj_ins.startDate))
-        for each_task in task_list:
-            cli.print("{}({}): {}".format(each_task.name, each_task.dueDate, each_task.description))
-            # cli.print(each_task)
+        
+        # Project details
+        project_data = [
+            ["Name", proj_ins.name],
+            ["Description", proj_ins.description],
+            ["Start Date", proj_ins.startDate]
+        ]
+        cli.print(tabulate(project_data, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
+
+        # Task list for the project
+        if task_list:
+            task_headers = ["Task Name", "Due Date", "Description"]
+            task_data = []
+            for each_task in task_list:
+                task_data.append([each_task.name, each_task.dueDate, each_task.description])
+            cli.print("\nTasks for Project '{}':".format(proj_name))
+            cli.print(tabulate(task_data, headers=task_headers, tablefmt="fancy_grid"))
+        else:
+            cli.print("\nNo tasks found for Project '{}'.".format(proj_name))
         return True
     def __show_task(self, task_name):
         task_ins = self.__pm.get_task_by_name(task_name)
         anno_list = self.__pm.get_annotation_list(task_name)
-        cli.print(task_ins)
-        for each_anno in anno_list:
-            cli.print(each_anno)
+        
+        # Task details
+        task_data = [
+            ["Name", task_ins.name],
+            ["Description", task_ins.description],
+            ["Due Date", task_ins.dueDate],
+            ["Project ID", task_ins.projId]
+        ]
+        cli.print(tabulate(task_data, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
+
+        # Annotation list for the task
+        if anno_list:
+            anno_headers = ["Annotation ID", "Content", "Timestamp"]
+            anno_data = []
+            for each_anno in anno_list:
+                anno_data.append([each_anno.aid, each_anno.content, each_anno.timestamp])
+            cli.print("\nAnnotations for Task '{}':".format(task_name))
+            cli.print(tabulate(anno_data, headers=anno_headers, tablefmt="fancy_grid"))
+        else:
+            cli.print("\nNo annotations found for Task '{}'.".format(task_name))
         return True
 
     def show(self, args):
@@ -85,6 +129,11 @@ class Reporter:
                 func_ret = self.__show_proj(arg_dict['project'])
             elif 'task' in arg_key:
                 func_ret = self.__show_task(arg_dict['task'])
+            else:
+                print("Please specify project/task")
+        else:
+            print("Please specify project/task")
+
         return func_ret
 
     def list(self, args):
@@ -100,9 +149,11 @@ class Reporter:
                 func_ret = self.__list_task(args)
             elif (arg_dict[arg_key[1]] == "annotation" or arg_dict[arg_key[1]] == "anno"):
                 func_ret = self.__list_anno(args)
+            else:
+                func_ret = self.__list_proj()
         else:
             # dbg_debug("List Default: Task")
-            func_ret = self.__list_task(args)
+            func_ret = self.__list_proj()
         return func_ret
 if __name__ == '__main__':
     rp = Reporter()

@@ -22,13 +22,13 @@ class Operator:
         arg_key = list(arg_dict.keys())
         # dbg_debug(name=arg_dict['name'], description = arg_dict['description'], start_date=arg_dict['start'])
         if 'name' not in arg_key:
-            dbg_debug('No proj name specified.')
+            dbg_warning('No proj name specified.')
             return False
         else:
             proj_name=arg_dict['name']
 
         if 'description' not in arg_key:
-            dbg_debug('No proj description specified.')
+            dbg_warning('No proj description specified.')
             return False
         else:
             proj_desc=arg_dict['description']
@@ -45,13 +45,13 @@ class Operator:
         arg_dict = args
         arg_key = list(arg_dict.keys())
         if 'project' not in arg_key:
-            dbg_debug('No task project specified.')
+            dbg_warning('No task project specified.')
             return False
         else:
             proj_name=arg_dict['project']
 
         if 'name' not in arg_key:
-            dbg_debug('No task name specified.')
+            dbg_warning('No task name specified.')
             return False
         else:
             task_name=arg_dict['name']
@@ -81,11 +81,11 @@ class Operator:
         # elif 'anno' in arg_key:
         #     anno_desc=arg_dict['anno']
         else:
-            dbg_error('No description specify.')
+            dbg_warning('No description specify.')
             return False
 
         if 'task' not in arg_key:
-            dbg_error('No task name specified.')
+            dbg_warning('No task name specified.')
             return False
         else:
             task_name=arg_dict['task']
