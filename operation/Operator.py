@@ -3,11 +3,11 @@ from datetime import *
 from utility.debug import *
 from utility.cli import *
 
-from Project import *
-from Task import *
-from Annotation import *
+from project.Project import *
+from project.Task import *
+from project.Annotation import *
 
-from ProjectManager import *
+from project.ProjectManager import *
 # User for some basic function including add/modify
 class Operator:
     # (PID TEXT, Name CHAR(255), Description VARCHAR , StartDate date)''')

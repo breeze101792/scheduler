@@ -1,9 +1,9 @@
 from datetime import *
-from TaskDB import *
+from core.TaskDB import *
 
-from Project import *
-from Task import *
-from Annotation import *
+from project.Project import *
+from project.Task import *
+from project.Annotation import *
 
 # Hal layer only need to connect dabase, no need to do compilcated opteration
 
