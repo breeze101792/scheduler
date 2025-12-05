@@ -15,20 +15,22 @@ class Operator:
     def __init__(self):
         self.__pm = ProjectManager()
     def __str__(self):
-        print("Porject")
+        self.__print_wrapper("Project")
+    def __print_wrapper(self, text):
+        print(text)
     def __add_proj(self, args):
         dbg_debug("Add Proj")
         arg_dict = args
         arg_key = list(arg_dict.keys())
         # dbg_debug(name=arg_dict['name'], description = arg_dict['description'], start_date=arg_dict['start'])
         if 'name' not in arg_key:
-            dbg_warning('No proj name specified.')
+            self.__print_wrapper('No proj name specified.')
             return False
         else:
             proj_name=arg_dict['name']
 
         if 'description' not in arg_key:
-            dbg_warning('No proj description specified.')
+            self.__print_wrapper('No proj description specified.')
             return False
         else:
             proj_desc=arg_dict['description']
@@ -45,13 +47,13 @@ class Operator:
         arg_dict = args
         arg_key = list(arg_dict.keys())
         if 'project' not in arg_key:
-            dbg_warning('No task project specified.')
+            self.__print_wrapper('No task project specified.')
             return False
         else:
             proj_name=arg_dict['project']
 
         if 'name' not in arg_key:
-            dbg_warning('No task name specified.')
+            self.__print_wrapper('No task name specified.')
             return False
         else:
             task_name=arg_dict['name']
@@ -81,11 +83,11 @@ class Operator:
         # elif 'anno' in arg_key:
         #     anno_desc=arg_dict['anno']
         else:
-            dbg_warning('No description specify.')
+            self.__print_wrapper('No description specify.')
             return False
 
         if 'task' not in arg_key:
-            dbg_warning('No task name specified.')
+            self.__print_wrapper('No task name specified.')
             return False
         else:
             task_name=arg_dict['task']

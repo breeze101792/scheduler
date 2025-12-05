@@ -39,10 +39,19 @@ class Reporter:
         cli.print("List Task")
         task_list = self.__pm.get_task_list()
         if task_list:
-            task_headers = ["Name", "Description", "Due Date", "Project ID"]
+            task_headers = ["Project", "Name", "Description", "Status", "Priority", "Start Date", "Due Date", "End Date"]
             task_data = []
             for each_task in task_list:
-                task_data.append([each_task.name, each_task.description, each_task.dueDate, each_task.pid])
+                task_data.append([
+                    self.__pm.get_project_by_id(each_task.pid).name,
+                    each_task.name,
+                    each_task.description,
+                    Status.to_string(each_task.status),
+                    Priority.to_string(each_task.priority),
+                    each_task.startDate,
+                    each_task.dueDate,
+                    each_task.endDate
+                ])
             cli.print(tabulate(task_data, headers=task_headers, tablefmt="fancy_grid"))
         else:
             cli.print("No tasks found.")
@@ -98,13 +107,26 @@ class Reporter:
         anno_list = self.__pm.get_annotation_list(task_name)
         
         # Task details
-        task_data = [
-            ["Name", task_ins.name],
-            ["Description", task_ins.description],
-            ["Due Date", task_ins.dueDate],
-            ["Project ID", task_ins.projId]
-        ]
-        cli.print(tabulate(task_data, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
+        # task_headers = ["Name", "Description", "Due Date", "Project"]
+        # task_data = [[
+        #     task_ins.name,
+        #     task_ins.description,
+        #     task_ins.dueDate,
+        #     self.__pm.get_project_by_id(task_ins.pid).name
+        # ]]
+        # cli.print(tabulate(task_data, headers=task_headers, tablefmt="fancy_grid"))
+        task_headers = ["Name", "Project", "Description", "Status", "Priority", "Start Date", "Due Date", "End Date"]
+        task_data = [[
+            task_ins.name,
+            self.__pm.get_project_by_id(task_ins.pid).name,
+            task_ins.description,
+            Status.to_string(task_ins.status),
+            Priority.to_string(task_ins.priority),
+            task_ins.startDate,
+            task_ins.dueDate,
+            task_ins.endDate
+        ]]
+        cli.print(tabulate(task_data, headers=task_headers, tablefmt="fancy_grid"))
 
         # Annotation list for the task
         if anno_list:

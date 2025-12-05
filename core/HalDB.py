@@ -69,10 +69,10 @@ class HalDB:
 
 # Project
 ################################################################
-    # def get_project_by_id(self, pid):
-    #     tmp_proj_raw = self.task_database.query_project_by_id(pid)
-    #     tmp_proj=self.__dblist_to_proj(tmp_proj_raw)
-    #     return tmp_proj
+    def get_project_by_id(self, pid):
+        tmp_proj_raw = self.task_database.query_project_by_id(pid)
+        tmp_proj=self.__dblist_to_proj(tmp_proj_raw)
+        return tmp_proj
     def get_project_by_name(self, proj_name):
         tmp_proj_raw = self.task_database.query_project_by_name(proj_name)
         tmp_proj=self.__dblist_to_proj(tmp_proj_raw)
@@ -95,10 +95,10 @@ class HalDB:
         # print(task_list)
         return task_list
 
-    # def get_task_by_id(self, tid):
-    #     tmp_task_raw = self.task_database.query_task_by_id(tid)
-    #     tmp_task = self.__dblist_to_task(tmp_task_raw)
-    #     return tmp_task
+    def get_task_by_id(self, tid):
+        tmp_task_raw = self.task_database.query_task_by_id(tid)
+        tmp_task = self.__dblist_to_task(tmp_task_raw)
+        return tmp_task
     def get_task_by_name(self, task_name):
         tmp_task_raw = self.task_database.query_task_by_name(task_name)
         tmp_task = self.__dblist_to_task(tmp_task_raw)
